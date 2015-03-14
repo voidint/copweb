@@ -18,6 +18,7 @@ go get github.com/oliamb/cutter
 go get github.com/satori/go.uuid
 go get github.com/slene/blackfriday
 ```
+- 进入`$GOPATH/src`目录并下载源代码：`git clone https://github.com/voidint/corpweb.git`
 - 进入`$GOPATH/src/corpweb`目录并执行`go build`命令。
 - 安装[MySQL](http://www.mysql.com/)数据库服务器。创建一个数据库如`corpweb`并在其中执行初始化SQL脚本`sql/init.sql`。
 - 根据实际情况修改配置文件`conf/app.conf`。
