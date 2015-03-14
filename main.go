@@ -3,7 +3,8 @@ package main
 import (
 	"corpweb/conf"
 
-	_ "git.oschina.net/voidint/cms4go/routers"
+	_ "corpweb/routers"
+
 	"github.com/astaxie/beego"
 	"github.com/beego/i18n"
 )
