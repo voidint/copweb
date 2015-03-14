@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="beanbag">
+    <meta name="author" content="voidint">
+
+    <title>个人设置 - iBeanBag</title>
+
+    <link href="/static/plugins/bootstrap-3.3.2/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/plugins/font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/plugins/metisMenu-1.0.3/metisMenu.min.css" rel="stylesheet">
+    <link href="/static/css/sb-admin-2.css" rel="stylesheet">
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+    body {
+        padding-bottom: 30px;
+    }
+    .panel-body span.glyphicon {
+        font-size: 22px;
+        cursor: pointer;
+    }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        {{template "navbarTpl" .}}
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <!-- <div class="container-fluid"> -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="page-header">{{i18n .Lang "admin_settings_personal_header"}}</h3>
+                </div>
+                <!--/.col-lg-12-->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="list-group" id="personal-settings-items">
+                        <!-- <a href="javascript:void(0);" class="list-group-item">Profile</a> -->
+                        <a href="javascript:void(0);" class="list-group-item" data-url="/admin/settings/changepwd">{{i18n .Lang "admin_settings_personal_item_account_settings"}}</a>
+                    </div>
+                </div>
+                <!-- /.col-lg-3 -->
+                <div class="col-sm-9" id="personal-settings-container"></div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    {{template "admin/tpl_footer.html"}}
+
+
+    <script src="/static/plugins/jquery-1.11.1.min.js"></script>
+    <script src="/static/plugins/bootstrap-3.3.2/js/bootstrap.js"></script>
+    <script src="/static/plugins/metisMenu-1.0.3/metisMenu.min.js"></script>
+    <script src="/static/scripts/sb-admin-2.js"></script>
+    <script src="/static/scripts/commFunc.js"></script>
+
+    <script type="text/javascript">
+    function initChangePwdForm($form) {
+        $form.find("label[for='old-pwd']").hide().parent('div').removeClass('has-error');
+        $form.find("label[for='new-pwd']").hide().parent('div').removeClass('has-error');
+        $form.find("label[for='confirm-pwd']").hide().parent('div').removeClass('has-error');
+        $form.find('.alert-div').empty();
+    };
+
+    // 校验修改密码表单
+    function validChangePwdForm($form) {
+        var valid = true;
+        initChangePwdForm($form);
+
+        var oldPwd = $.trim($('#old-pwd').val());
+        if (oldPwd.length === 0) {
+            var tips = '{{i18n .Lang "tips_content_cant_empty_and_too_long" 50}}';
+            $form.find("label[for='old-pwd']").text(tips).show().parent('div').addClass('has-error');
+            valid = false;
+        }
+
+        var newPwd = $.trim($('#new-pwd').val());
+        if (newPwd.length === 0 || newPwd.length > 50) {
+            var tips = '{{i18n .Lang "tips_content_cant_empty_and_too_long" 50}}';
+            $form.find("label[for='new-pwd']").text(tips).show().parent('div').addClass('has-error');
+            valid = false;
+        }
+
+        var confirmPwd = $.trim($('#confirm-pwd').val());
+        if (confirmPwd.length === 0 || confirmPwd.length > 50) {
+            var tips = '{{i18n .Lang "tips_content_cant_empty_and_too_long" 50}}';
+            $form.find("label[for='confirm-pwd']").text(tips).show().parent('div').addClass('has-error');
+            valid = false;
+        }
+
+        if (newPwd !== confirmPwd) {
+            var tips = '{{i18n .Lang "tips_confirmpwd_newpwd_mismatch"}}';
+            $form.find("label[for='confirm-pwd']").text(tips).show().parent('div').addClass('has-error');
+            valid = false;
+        }
+
+        return valid;
+    };
+
+    function changepwd($form) {
+        if (!validChangePwdForm($form)) {
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/admin/user/changepwd",
+            dataType: "json",
+            data: $form.serialize(),
+            success: function(json) {
+                if (json.Result === 'success') {
+                    addAlert($form.find('.alert-div'), json.Msg, 'alert-success');
+                    return;
+                }
+                if (json.Fields != null && typeof json.Fields === 'object' && !$.isEmptyObject(json.Fields)) {
+                    for (var fieldName in json.Fields) {
+                        var tips = json.Fields[fieldName];
+                        if (fieldName == "OldPwd") {
+                            $("label[for='old-pwd']").text(tips).show().parent('div').addClass('has-error');
+                        } else if (fieldName == "NewPwd") {
+                            $("label[for='new-pwd']").text(tips).show().parent('div').addClass('has-error');
+                        }
+                    }
+                } else {
+                    addAlert($form.find('.alert-div'), json.Msg, 'alert-danger');
+                }
+            },
+            error: function() {
+                addAlert($form.find('.alert-div'), '{{i18n .Lang "tips_sys_err_and_contact_tech"}}', 'alert-danger');
+            }
+        });
+    };
+
+
+    function loadHTML(url) {
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "html",
+            cache: false,
+            success: function(html) {
+                $('#personal-settings-container').html(html);
+            },
+            error: function() {}
+        });
+    };
+
+    $(document).ready(function() {
+        loadHTML($('#personal-settings-items a:first').data('url'));
+
+        $('#personal-settings-items a').on('click', function() {
+            loadHTML($(this).data('url'));
+        });
+
+    });
+    </script>
+
+    {{template "tpl_ie_warning.html" .}}
+
+</body>
+
+</html>

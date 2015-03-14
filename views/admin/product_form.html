@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="beanbag">
+    <meta name="author" content="voidint">
+
+    <title>产品添加 - iBeanBag</title>
+
+    <link href="/static/plugins/bootstrap-3.3.2/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/plugins/toopay-bootstrap-markdown-2.8.0/css/bootstrap-markdown.min.css" rel="stylesheet">
+    <link href="/static/plugins/summernote-0.6.1/dist/summernote.css" rel="stylesheet">
+    <link href="/static/plugins/font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/plugins/metisMenu-1.0.3/metisMenu.min.css" rel="stylesheet">
+    <link href="/static/plugins/webuploader-0.1.5/webuploader.css" rel="stylesheet" type="text/css">
+    <link href="/static/plugins/copper-0.7.7/cropper.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/copper.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+    body {
+        padding-bottom: 30px;
+    }
+    .webuploader-pick {
+        /*覆盖webuploader插件默认样式*/
+        
+        border: 1px solid rgb(204, 204, 204);
+        width: 100px;
+        height: 90px;
+        margin-top: 10px;
+        position: relative;
+        cursor: pointer;
+        overflow: hidden;
+        background: url(/static/image/icon_add_image2.png) no-repeat 50% 50%;
+    }
+    .webuploader-pick-hover {
+        /*覆盖webuploader插件默认样式*/
+        /*background: #00a2d4;*/
+    }
+    .picPreviewBox .picPreviewItem {
+        margin-right: 20px;
+        display: inline-block;
+        _display: inline;
+        _zoom: 1;
+        vertical-align: top;
+        position: relative;
+    }
+    .picPreviewBox .picPreviewItem .btn_close {
+        display: block;
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        right: -15px;
+        top: -15px;
+    }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        {{template "navbarTpl" .}}
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <!-- <div class="container-fluid"> -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">{{i18n .Lang "admin_product_info_page_header"}}</h3>
+                </div>
+                <!--/.col-lg-12-->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">{{i18n .Lang "admin_product_info_panel_heading"}}</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <form class="" id="prod-form">
+                                        <div class="form-group">
+                                            <label>{{i18n .Lang "admin_product_info_label_title"}}</label>
+                                            <input type="text" class="form-control" id="prod-title" name="Title" maxlength="100" placeholder="" value="{{.prod.Title}}">
+                                            <label class="control-label" for="prod-title" style="display:none;"></label>
+                                            <input type="hidden" id="prod-id" name="Id" value="{{.prod.Id}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{i18n .Lang "admin_product_info_label_intro"}}</label>
+                                            <textarea id="prod-intro" name="Intro" class="form-control" rows="3" onkeyup="limitChars($(this), 200);">{{.prod.Intro}}</textarea>
+                                            <label class="control-label" for="prod-intro" style="display:none;"></label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>{{i18n .Lang "admin_product_info_label_desc"}}</label>
+                                            <!-- Nav tabs -->
+                                            <ul class="nav nav-tabs" role="tablist" id="desc-ul-id">
+                                                <li role="presentation" {{if or (not .prod) (printf `%d` .prod.DescUseMarkdown|eq `1`)}}class="active" {{end}}>
+                                                    <a href="#markdown-div-id" role="tab" data-toggle="tab">
+                                                        {{i18n .Lang "label_nav_tabs_markdown_editor"}}
+                                                    </a>
+                                                </li>
+                                                <li role="presentation" {{if printf `%d` .prod.DescUseMarkdown|eq `2`}}class="active" {{end}}>
+                                                    <a href="#richtext-div-id" role="tab" data-toggle="tab">
+                                                        {{i18n .Lang "label_nav_tabs_richtext_editor"}}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <!-- Tab panes -->
+                                            <div class="tab-content" id="desc-tab-content">
+                                                <div role="tabpanel" class="tab-pane {{if or (not .prod) (printf `%d` .prod.DescUseMarkdown|eq `1`)}}active{{end}}" id="markdown-div-id">
+                                                    <textarea id="prod-desc" name="Desc" class="form-control" rows="10">{{if printf `%d` .prod.DescUseMarkdown|eq `1`}}{{.prod.Desc}}{{end}}</textarea>
+                                                    <label class="control-label" for="prod-desc" style="display:none;"></label>
+                                                </div>
+                                                <div role="tabpanel" class="tab-pane {{if printf `%d` .prod.DescUseMarkdown|eq `2`}}active{{end}}" id="richtext-div-id">
+                                                    <div id="summernote">{{if printf `%d` .prod.DescUseMarkdown|eq `2`}}{{str2html .prod.Desc}}{{end}}</div>
+                                                    <label class="control-label" for="summernote" style="display:none;"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group panel panel-default">
+                                            <div class="panel-heading">
+                                                <label>{{i18n .Lang "admin_product_info_label_img_cover"}}&nbsp;<small>
+                                                    ({{i18n .Lang "admin_product_info_label_img_cover_note" .coverImgWidth .coverImgHeight}})</small>
+                                                </label>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div id="cover-container-id" class="picPreviewBox" data-imgwidth="{{.coverImgWidth}}" data-imgheight="{{.coverImgHeight}}" data-file-num-limit="{{.coverFileNumLimit}}">
+                                                    {{if .prod.CoverImg}}
+                                                    <div class="picPreviewItem">
+                                                        <img class="img-responsive img-thumbnail" src="/res{{.prod.CoverImg.Path}}">
+                                                        <input type="hidden" name="CoverImg.Path" value="{{.prod.CoverImg.Path}}">
+                                                    </div>
+                                                    {{end}}
+                                                </div>
+                                                <div id="cover-btn-id"></div>
+                                                <label class="control-label" for="cover-btn-id" style="display:none;"></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group panel panel-default">
+                                            <div class="panel-heading">
+                                                <label>{{i18n .Lang "admin_product_info_label_img_detail"}}&nbsp;<small>({{i18n .Lang "admin_product_info_label_img_detail_note" .detailImgWidth .detailImgHeight}})</small>
+                                                </label>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div id="detail-container-id" class="picPreviewBox" data-imgwidth="{{.detailImgWidth}}" data-imgheight="{{.detailImgHeight}}" data-file-num-limit="{{.detailFileNumLimit}}">
+                                                    {{range .prod.DetailImgs}}
+                                                    <div class="picPreviewItem">
+                                                        <img class="img-responsive img-thumbnail" src="/res{{.Path}}">
+                                                        <input type="hidden" name="DetailImgs.Path" value="{{.Path}}">
+                                                    </div>
+                                                    {{end}}
+                                                </div>
+                                                <div id="detail-btn-id"></div>
+                                                <label class="control-label" for="detail-btn-id" style="display:none;"></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input name="IsPublic" value="1" type="checkbox" {{if .prod.IsPublic|printf "%d"|eq `1`}}checked="checked" {{end}}>{{i18n .Lang "admin_product_info_label_publish"}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="alert-div-id"></div>
+
+                                        <button type="reset" class="btn btn-default" onclick="clearForm();">
+                                            {{i18n .Lang "label_btn_reset"}}
+                                        </button>
+                                        <button type="button" class="btn btn-primary" onclick="saveProduct();">
+                                            {{i18n .Lang "label_btn_submit"}}
+                                        </button>
+
+                                    </form>
+                                </div>
+                                <!-- /.col-lg-12 -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel panel-default -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    {{template "admin/tpl_footer.html"}}
+
+
+    <div id="modal-div-id" class="modal fade" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">{{i18n .Lang "admin_product_info_crop_modal_title"}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row eg-main">
+                            <div class="col-xs-12 col-sm-9">
+                                <div class="eg-wrapper"></div>
+                            </div>
+                            <!--
+                            <div class="col-xs-12 col-sm-3">
+                                <div class="eg-preview clearfix">
+                                    <div class="preview preview-lg"></div>
+                                </div>
+                            </div>
+                            -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        {{i18n .Lang "label_btn_cancel"}}
+                    </button>
+                    <button type="button" class="btn btn-primary btn-ok" onclick="doCrop();">
+                        {{i18n .Lang "label_btn_ok"}}
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+
+    <script src="/static/plugins/jquery-1.11.1.min.js"></script>
+    <script src="/static/plugins/bootstrap-3.3.2/js/bootstrap.js"></script>
+    <script src="/static/plugins/toopay-bootstrap-markdown-2.8.0/js/bootstrap-markdown.js"></script>
+    <script src="/static/plugins/toopay-bootstrap-markdown-2.8.0/locale/bootstrap-markdown.zh.js"></script>
+    <script src="/static/plugins/summernote-0.6.1/dist/summernote.min.js"></script>
+    <script src="/static/plugins/summernote-0.6.1/lang/summernote-zh-CN.js"></script>
+    <script src="/static/plugins/webuploader-0.1.5/webuploader.js"></script>
+    <script src="/static/plugins/copper-0.7.7/cropper.js"></script>
+    <script src="/static/plugins/metisMenu-1.0.3/metisMenu.min.js"></script>
+    <script src="/static/scripts/sb-admin-2.js"></script>
+    <script src="/static/scripts/commFunc.js"></script>
+
+    <script type="text/javascript">
+    // 用于标识当前操作的是封面图片还是详情图片。cover-封面图片; detail-详情图片;
+    var section;
+
+    // 封面图片裁剪成功后的回调操作
+    var onSuccessCropCover = function(jsonData) {
+        if (jsonData.Result === 'success') {
+            var html = [
+                '<div class="picPreviewItem">',
+                '<img class="img-responsive img-thumbnail" src="/res' + jsonData.ExtMap.newImgPath + '">',
+                '<input type="hidden" name="CoverImg.Path" value="' + jsonData.ExtMap.newImgPath + '">',
+                '</div>'
+            ];
+            $('#cover-container-id').empty().append(html.join(''));
+            $('#modal-div-id').modal('hide');
+        }
+    };
+
+    var onErrorCropCover = function() {
+        var tip = '{{i18n .Lang "tips_sys_err_and_contact_tech"}}';
+        $("label[for='cover-btn-id']").text(tip).show().parent('div').addClass('has-error');
+        $('#modal-div-id').modal('hide');
+    };
+
+    var onSuccessCropDetail = function(jsonData) {
+        if (jsonData.Result === 'success') {
+            var html = [
+                '<div class="picPreviewItem">',
+                '<img class="img-responsive img-thumbnail" src="/res' + jsonData.ExtMap.newImgPath + '">',
+                '<input type="hidden" name="DetailImgs.Path" value="' + jsonData.ExtMap.newImgPath + '">',
+                '</div>'
+            ];
+            $('#detail-container-id').append(html.join(''));
+            $('#modal-div-id').modal('hide');
+        }
+    };
+
+    var onErrorCropDetail = function() {
+        var tip = '{{i18n .Lang "tips_sys_err_and_contact_tech"}}';
+        $("label[for='detail-btn-id']").text(tip).show().parent('div').addClass('has-error');
+        $('#modal-div-id').modal('hide');
+    };
+
+    // 待裁剪区域坐标
+    var coord;
+
+    // 选取需要裁剪的区域
+    function cropper($cropImg, width, height) {
+        coord = {};
+        $cropImg.cropper({
+            aspectRatio: width / height,
+            // preview: ".preview",
+            done: function(c) {
+                coord.x = c.x;
+                coord.y = c.y;
+                coord.width = c.width;
+                coord.height = c.height;
+            }
+        });
+    };
+
+    // 将待裁剪区域坐标发送至服务器端裁剪图片
+    function cropByServer(imgpath, sizeW, sizeH, onSuccessFunc, onErrorFunc) {
+        var data = {
+            "imgpath": imgpath,
+            "x": parseInt(coord.x),
+            "y": parseInt(coord.y),
+            "width": parseInt(coord.width),
+            "height": parseInt(coord.height),
+            "sizeWidth": parseInt(sizeW),
+            "sizeHeight": parseInt(sizeH)
+        };
+        $.ajax({
+            type: "POST",
+            url: "/admin/img/crop",
+            data: data,
+            dataType: "json",
+            success: function(jsonData) {
+                if (typeof onSuccessFunc === 'function') {
+                    onSuccessFunc(jsonData);
+                }
+            },
+            error: function() {
+                if (typeof onErrorFunc === 'function') {
+                    onErrorFunc();
+                }
+            }
+        });
+    };
+
+    function doCrop() {
+        var imgpath = $('#modal-div-id .modal-body .eg-wrapper').find('img').first().attr("src");
+        if (section == 'cover') {
+            var w = $('#cover-container-id').data("imgwidth");
+            var h = $('#cover-container-id').data("imgheight");
+            cropByServer(imgpath, w, h, onSuccessCropCover, onErrorCropCover);
+        } else if (section == 'detail') {
+            var w = $('#detail-container-id').data("imgwidth");
+            var h = $('#detail-container-id').data("imgheight");
+            cropByServer(imgpath, w, h, onSuccessCropDetail, onErrorCropDetail);
+        }
+    };
+
+    function formValid() {
+        var valid = true;
+        var prodTitle = $.trim($('#prod-title').val());
+        if (prodTitle.length === 0 || prodTitle.length > 100) {
+            var title = '{{i18n .Lang "tips_content_cant_empty_and_too_long" 100}}';
+            $("label[for='prod-title']").text(title).show().parent('div').addClass('has-error');
+            valid = false;
+        } else {
+            $("label[for='prod-title']").hide().parent('div').removeClass('has-error');
+        }
+
+        var prodIntro = $.trim($('#prod-intro').val());
+        if (prodIntro.length === 0 || prodIntro.length > 200) {
+            var title = '{{i18n .Lang "tips_content_cant_empty_and_too_long" 200}}';
+            $("label[for='prod-intro']").text(title).show().parent('div').addClass('has-error');
+            valid = false;
+        } else {
+            $("label[for='prod-intro']").hide().parent('div').removeClass('has-error');
+        }
+
+        var useMarkdown = $('#desc-ul-id li:first').hasClass('active');
+        var forId = useMarkdown ? 'prod-desc' : 'summernote';
+        var prodDesc = useMarkdown ? $.trim($('#prod-desc').val()) : $('#summernote').code();
+        if (prodDesc.length === 0 || prodDesc.length > 5000) {
+            var title = '{{i18n .Lang "tips_content_cant_empty_and_too_long" 5000}}';
+            $("label[for='" + forId + "']").text(title).show().parent('div').addClass('has-error');
+            valid = false;
+        } else {
+            $("label[for='" + forId + "']").hide().parent('div').removeClass('has-error');
+        }
+
+        var coverImgSize = $("#cover-container-id img").size();
+        if (coverImgSize === 0) {
+            var title = '{{i18n .Lang "tips_need_img"}}';
+            $("label[for='cover-btn-id']").text(title).show().parent('div').addClass('has-error');
+            valid = false;
+        } else {
+            $("label[for='cover-btn-id']").hide().parent('div').removeClass('has-error');
+
+            var limit = $('#cover-container-id').data("file-num-limit");
+            if (coverImgSize > limit) {
+                var title = '{{i18n .Lang "tips_img_over_file_num_limit" .coverFileNumLimit}}';
+                $("label[for='cover-btn-id']").text(title).show().parent('div').addClass('has-error');
+                valid = false;
+            } else {
+                $("label[for='cover-btn-id']").hide().parent('div').removeClass('has-error');
+            }
+        }
+
+        var detailImgSize = $("#detail-container-id img").size();
+        if (detailImgSize === 0) {
+            var title = '{{i18n .Lang "tips_need_img"}}';
+            $("label[for='detail-btn-id']").text(title).show().parent('div').addClass('has-error');
+            valid = false;
+        } else {
+            $("label[for='detail-btn-id']").hide().parent('div').removeClass('has-error');
+
+            var limit = $('#detail-container-id').data("file-num-limit");
+            if (detailImgSize > limit) {
+                var title = '{{i18n .Lang "tips_img_over_file_num_limit" .detailFileNumLimit}}';
+                $("label[for='detail-btn-id']").text(title).show().parent('div').addClass('has-error');
+                valid = false;
+            } else {
+                $("label[for='detail-btn-id']").hide().parent('div').removeClass('has-error');
+            }
+        }
+
+        return valid;
+    };
+
+    function saveProduct() {
+        clearFormValidStyle();
+
+        if (!formValid()) {
+            return;
+        }
+
+        var jsonArr = $('#prod-form').serializeArray();
+        var useMarkdown = $('#desc-ul-id li:first').hasClass('active');
+        jsonArr.push({
+            "name": "DescUseMarkdown",
+            "value": (useMarkdown ? 1 : 2),
+        });
+
+        /*if (useMarkdown) {
+            jsonArr.push({
+                "name": "DescUseMarkdown",
+                "value": 1
+            });
+        }*/
+        var isPublic = 2; //2-非公开;
+        $.each(jsonArr, function(idx, elem) {
+            if (elem.name == "Desc") {
+                elem.value = useMarkdown ? $.trim($('#prod-desc').val()) : $('#summernote').code();
+                // return false;
+            }
+            if (elem.name == "IsPublic") {
+                isPublic = elem.value;
+            }
+        });
+
+        jsonArr.push({
+            "name": "IsPublic",
+            "value": isPublic,
+        });
+
+        if ($('#prod-id').val().length === 0) {
+            addProduct(jsonArr);
+        } else {
+            modProduct(jsonArr);
+        }
+    };
+
+    function addProduct(data) {
+        $.ajax({
+            type: "POST",
+            url: "/admin/product/add.json",
+            data: data,
+            dataType: "json",
+            success: function(jsonData) {
+                if (jsonData.Result === "success") {
+                    clearForm();
+                    addAlert($('#alert-div-id'), jsonData.Msg, 'alert-success');
+                } else if (jsonData.Result === "fail") {
+                    if (jsonData.Fields != null && typeof jsonData.Fields === 'object' && jsonData.Fields != {}) {
+                        for (var fieldName in jsonData.Fields) {
+                            var tip = jsonData.Fields[fieldName];
+                            if (fieldName == "Desc") {
+                                var useMarkdown = $('#desc-ul-id li:first').hasClass('active');
+                                var forId = useMarkdown ? 'prod-desc' : 'summernote';
+                                $("label[for='" + forId + "']").text(tip).show().parent('div').addClass('has-error');
+
+                            } else if (fieldName == "CoverImg.Path") {
+                                $("label[for='cover-btn-id']").text(tip).show().parent('div').addClass('has-error');
+
+                            } else if (fieldName == "DetailImgs.Path") {
+                                $("label[for='detail-btn-id']").text(tip).show().parent('div').addClass('has-error');
+
+                            } else {
+                                $("#prod-form :input[name='" + fieldName + "']").nextAll('label').text(tip).show().parent('div').addClass('has-error');
+                            }
+                        }
+                    } else {
+                        addAlert($('#alert-div-id'), jsonData.Msg, 'alert-danger');
+                    }
+                }
+            },
+            error: function() {
+                addAlert($('#alert-div-id'), '{{i18n .Lang "tips_sys_err_and_contact_tech"}}', 'alert-danger');
+            }
+        });
+    };
+
+
+
+    function modProduct(data) {
+        $.ajax({
+            type: "POST",
+            url: "/admin/product/mod.json",
+            data: data,
+            dataType: "json",
+            success: function(jsonData) {
+                if (jsonData.Result === "success") {
+                    // clearForm();
+                    addAlert($('#alert-div-id'), jsonData.Msg, 'alert-success');
+                } else if (jsonData.Result === "fail") {
+                    if (jsonData.Fields != null && typeof jsonData.Fields === 'object' && jsonData.Fields != {}) {
+                        for (var fieldName in jsonData.Fields) {
+                            var tip = jsonData.Fields[fieldName];
+                            if (fieldName == "Desc") {
+                                var useMarkdown = $('#desc-ul-id li:first').hasClass('active');
+                                var forId = useMarkdown ? 'prod-desc' : 'summernote';
+                                $("label[for='" + forId + "']").text(tip).show().parent('div').addClass('has-error');
+
+                            } else if (fieldName == "CoverImg.Path") {
+                                $("label[for='cover-btn-id']").text(tip).show().parent('div').addClass('has-error');
+
+                            } else if (fieldName == "DetailImgs.Path") {
+                                $("label[for='detail-btn-id']").text(tip).show().parent('div').addClass('has-error');
+
+                            } else {
+                                $("#prod-form :input[name='" + fieldName + "']").nextAll('label').text(tip).show().parent('div').addClass('has-error');
+                            }
+                        }
+                    } else {
+                        addAlert($('#alert-div-id'), jsonData.Msg, 'alert-danger');
+                    }
+                }
+            },
+            error: function() {
+                addAlert($('#alert-div-id'), '{{i18n .Lang "tips_sys_err_and_contact_tech"}}', 'alert-danger');
+            }
+        });
+    };
+
+    function clearForm() {
+        // 清除表单值
+        $('#prod-title').val('');
+        $('#prod-intro').val('');
+        $('#prod-desc').val('');
+        $('#summernote').code('');
+        $('#cover-container-id').empty();
+        $('#detail-container-id').empty();
+        clearFormValidStyle();
+    };
+
+    function clearFormValidStyle() {
+        // 清除表单校验样式
+        $("label[for='prod-title']").hide().parent('div').removeClass('has-error');
+        $("label[for='prod-intro']").hide().parent('div').removeClass('has-error');
+        $("label[for='prod-desc']").hide().parent('div').removeClass('has-error');
+        $("label[for='summernote']").hide().parent('div').removeClass('has-error');
+        $("label[for='cover-btn-id']").hide().parent('div').removeClass('has-error');
+        $("label[for='detail-btn-id']").hide().parent('div').removeClass('has-error');
+        $('#alert-div-id').empty();
+    };
+
+    // 请求服务端将markdown内容转化为html
+    function markdown2html(markdown) {
+        var htmlContent;
+        $.ajax({
+            async: false,
+            type: "POST",
+            url: "/admin/markdown2html.json",
+            data: {
+                "markdown": markdown
+            },
+            dataType: "json",
+            success: function(jsonData) {
+                if (jsonData.Result === "success") {
+                    htmlContent = jsonData.ExtObj;
+                } else {
+                    htmlContent = "error...";
+                }
+            },
+            error: function() {
+                // console.log("error");
+            }
+        });
+        return htmlContent;
+    };
+
+    $(document).ready(function() {
+
+        $('#prod-desc').markdown({
+            language: '{{if .Lang|eq "zh-CN"}}zh{{else}}en{{end}}',
+            footer: '{{i18n .Lang "tips_markdown_learning"}}',
+            onPreview: function(e) {
+                return markdown2html(e.getContent());
+            }
+        });
+
+        $('#summernote').summernote({
+            height: 225,
+            tabsize: 2,
+            lang: '{{.Lang}}',
+        });
+
+        var coverUploader = WebUploader.create({
+            auto: true,
+            swf: '/static/plugins/webuploader-0.1.5/Uploader.swf',
+            server: '/admin/img/upload',
+            resize: false,
+            pick: {
+                id: '#cover-btn-id',
+                multiple: false
+            },
+            accept: {
+                title: 'Images',
+                extensions: 'jpg,jpeg,png',
+                mimeTypes: 'image/*'
+            },
+            // fileNumLimit: 1,
+            fileSingleSizeLimit: '{{.coverMaxSize}}' * 1024 * 1024 //单个文件大小
+
+        }).on('beforeFileQueued', function(file) {
+            // 可上传文件数量校验
+            var limit = $('#cover-container-id').data("file-num-limit");
+            var filenum = $("#cover-container-id img").size();
+            if (filenum >= limit) {
+                var tip = '{{i18n .Lang "tips_img_over_file_num_limit" .coverFileNumLimit}}';
+                $("label[for='cover-btn-id']").text(tip).show().parent('div').addClass('has-error');
+                return false;
+            }
+            return true;
+        }).on('error', function(handler) {
+            // 文件大小超限
+            if (handler == "F_EXCEED_SIZE") {
+                var tip = '{{i18n .Lang "tips_img_over_max_size" .coverMaxSize}}';
+                $("label[for='cover-btn-id']").text(tip).show().parent('div').addClass('has-error');
+            }
+        }).on('uploadError', function(file) {
+            var tip = '{{i18n .Lang "tips_sys_err_and_contact_tech"}}';
+            $("label[for='cover-btn-id']").text(tip).show().parent('div').addClass('has-error');
+
+        }).on('uploadSuccess', function(file, response) {
+            section = "cover";
+            if (response.Result != "success") {
+                $("label[for='cover-btn-id']").text(response.Msg).show().parent('div').addClass('has-error');
+                return;
+            }
+            $('#' + file.id).addClass('upload-state-done');
+            var imgHtml = '<img class="copper" src="/res' + response.ExtMap.filepath + '">';
+            $('#modal-div-id .modal-body .eg-wrapper').empty().append(imgHtml);
+            $('#modal-div-id').modal('show');
+            cropper($('#modal-div-id .modal-body .eg-wrapper').find('img'), '{{.coverImgWidth}}', '{{.coverImgHeight}}');
+        });
+
+
+        var detailUploader = WebUploader.create({
+            auto: true,
+            swf: '/static/plugins/webuploader-0.1.5/Uploader.swf',
+            server: '/admin/img/upload',
+            resize: false,
+            pick: {
+                id: '#detail-btn-id',
+                multiple: true
+            },
+            accept: {
+                title: 'Images',
+                extensions: 'jpg,jpeg,png',
+                mimeTypes: 'image/*'
+            },
+            // fileNumLimit: 5,
+            fileSingleSizeLimit: '{{.coverMaxSize}}' * 1024 * 1024 // 单个文件大小
+
+        }).on('beforeFileQueued', function(f) {
+            // 可上传文件数量校验
+            var limit = $('#detail-container-id').data("file-num-limit");
+            var filenum = $("#detail-container-id img").size();
+            if (filenum >= limit) {
+                $("label[for='detail-btn-id']").text('{{i18n .Lang "tips_img_over_file_num_limit" .detailFileNumLimit}}').show().parent('div').addClass('has-error');
+                return false;
+            }
+            return true;
+        }).on('error', function(handler) {
+            // 文件大小超限
+            if (handler == "F_EXCEED_SIZE") {
+                var tip = '{{i18n .Lang "tips_img_over_max_size" .detailMaxSize}}';
+                $("label[for='detail-btn-id']").text(tip).show().parent('div').addClass('has-error');
+            }
+        }).on('uploadSuccess', function(file, response) {
+            section = "detail";
+            if (response.Result != "success") {
+                $("label[for='detail-btn-id']").text(response.Msg).show().parent('div').addClass('has-error');
+                return;
+            }
+            var imgHtml = '<img class="copper" src="/res' + response.ExtMap.filepath + '">';
+            $('#modal-div-id .modal-body .eg-wrapper').empty().append(imgHtml);
+            $('#modal-div-id').modal('show');
+            cropper($('#modal-div-id .modal-body .eg-wrapper').find('img'), '{{.detailImgWidth}}', '{{.detailImgHeight}}');
+        });
+
+        // 裁剪图片时，双击鼠标等同于点击确定按钮
+        $(document).on("dblclick", "#modal-div-id .modal-body .eg-wrapper", function() {
+            $(this).parents(".modal-content").find(".btn-ok").trigger("click");
+        });
+
+
+
+        $(document).on("mouseenter", ".picPreviewItem", function() {
+            $(this).append('<h2><span class="btn_close glyphicon glyphicon-remove-circle"></span></h2>');
+        });
+
+        $(document).on("mouseleave", ".picPreviewItem", function() {
+            $(this).find(".btn_close").parent("h2").remove();
+        });
+
+        $(".picPreviewBox").on("click", ".btn_close", function() {
+            $(this).parents(".picPreviewItem").remove();
+        });
+
+    });
+    </script>
+
+    {{template "tpl_ie_warning.html" .}}
+
+</body>
+
+</html>

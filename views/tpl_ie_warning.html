@@ -1,0 +1,53 @@
+{{define "tpl_ie_warning.html"}}
+<div id="ie-warning-modal-div-id" class="modal fade" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">{{i18n .Lang "modal_title_warning"}}</h4>
+            </div>
+            <div class="modal-body">
+                <p>{{i18n .Lang "modal_body_low_ver_browser"}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                    {{i18n .Lang "label_btn_i_known"}}
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<script type="text/javascript">
+// 检查浏览器
+(function() {
+    if (!/^Mozilla\/5\.0/.test(navigator.userAgent)) {
+        $('#ie-warning-modal-div-id').modal('show');
+    }
+})();
+
+$(document).ready(function() {
+    /*var Sys = {};
+    var ua = navigator.userAgent.toLowerCase();
+    console.log(ua);
+    var s;
+    (s = ua.match(/rv:([\d.]+)\) like gecko/)) ? Sys.ie = s[1]:
+        (s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1] :
+        (s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] :
+        (s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] :
+        (s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] :
+        (s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0;
+
+    if (Sys.ie) console.log('IE: ' + Sys.ie);
+    if (Sys.firefox) console.log('Firefox: ' + Sys.firefox);
+    if (Sys.chrome) console.log('Chrome: ' + Sys.chrome);
+    if (Sys.opera) console.log('Opera: ' + Sys.opera);
+    if (Sys.safari) console.log('Safari: ' + Sys.safari);*/
+});
+</script>
+
+{{end}}

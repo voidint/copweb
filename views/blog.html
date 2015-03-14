@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    {{template "tpl_meta.html"}}
+
+    <title>{{i18n .Lang "portal_title_blog"}}</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/plugins/bootstrap-3.3.2/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/static/css/modern-business.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/static/plugins/font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css" media="screen">
+    body {
+        padding-top: 60px;
+        padding-bottom: 30px;
+    }
+    hr.divider {
+        margin: 30px 0px;
+    }
+    #data-div-id img {
+        width: 600px;
+        height: 300px;
+    }
+    </style>
+</head>
+
+<body>
+
+    {{template "tpl_navbar.html" .}}
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <!-- Page Heading/Breadcrumbs -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{i18n .Lang "portal_navbar_blog"}}
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="/">{{i18n .Lang "portal_navbar_home"}}</a>
+                    </li>
+                    <li class="active">{{i18n .Lang "portal_navbar_blog"}}</li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+            <!-- Blog Entries Column -->
+            <div class="col-lg-12" id="data-div-id">
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div id="alert-div-id"></div>
+
+        <!-- Pagination -->
+        <div class="row text-center">
+            <ul id="pagination"></ul>
+        </div>
+
+        <hr>
+
+        <!-- Footer -->
+        {{template "tpl_footer.html"}}
+
+    </div>
+    <!-- /.container -->
+
+    <script src="/static/plugins/jquery-1.11.1.min.js"></script>
+    <script src="/static/plugins/bootstrap-3.3.2/js/bootstrap.js"></script>
+    <script src="/static/plugins/bootstrap-paginator-1.0/bootstrap-paginator.min.js"></script>
+    <script src="/static/plugins/jquery.cookie.js"></script>
+    <script src="/static/scripts/portal.js"></script>
+    <script src="/static/scripts/commFunc.js"></script>
+    <script type="text/javascript">
+    // 生成表格行的html
+    function genRowsHtml(page) {
+        if (page == null || page.Rows == null || !(page.Rows instanceof Array) || page.Rows.length <= 0) {
+            return '<p class="text-center">{{i18n .Lang "tips_no_data"}}</p>';
+        }
+        var rows = page.Rows;
+        var html = [];
+        for (var i = 0, len = rows.length; i < len; i++) {
+            html.push('<h2><a href="/blog/post/' + rows[i].Id + '">' + rows[i].Title + '</a></h2>');
+            html.push('<p class="lead">by voidint</p>');
+            html.push('<p><i class="fa fa-clock-o"></i> Posted on&nbsp;&nbsp;' + RFC3339ToIsoDateTime(rows[i].Created) + '</p>');
+            html.push('<hr>');
+            if (rows[i].Cover != null && typeof rows[i].Cover === 'object') {
+                html.push('<a href="/blog/post/' + rows[i].Id + '">');
+                html.push('<img class="img-hover" src="/res' + rows[i].Cover.Path + '">');
+                html.push('</a><hr>');
+            }
+            html.push('<p>' + rows[i].Intro + '</p>');
+            html.push('<a class="btn btn-primary" href="/blog/post/' + rows[i].Id + '">{{i18n .Lang "label_read_more"}} <i class="fa fa-angle-right"></i></a><hr>');
+        }
+        return html.join('');
+    };
+
+    // 按照页号加载数据
+    function loadData(curPageNo) {
+        if (typeof curPageNo !== "number") {
+            curPageNo = 1;
+        }
+        $.ajax({
+            type: "GET",
+            url: "/blog/page",
+            data: {
+                "curPageNo": curPageNo,
+                "pageSize": 5,
+            },
+            dataType: "json",
+            success: function(jsonData) {
+                if (jsonData.Result === "success") {
+                    $('#data-div-id').empty().append(genRowsHtml(jsonData.ExtObj));
+                    var pages = jsonData.ExtObj.TotalPages;
+                    $('#pagination').bootstrapPaginator({
+                        totalPages: pages,
+                        currentPage: curPageNo,
+                    });
+                    return;
+                }
+                addAlert($('#alert-div-id'), jsonData.Msg, 'alert-danger');
+            },
+            error: function() {
+                addAlert($('#alert-div-id'), '{{i18n .Lang "tips_sys_err_and_contact_tech"}}', 'alert-danger');
+            }
+
+        });
+    };
+
+    $(document).ready(function() {
+        loadData();
+
+        $('#pagination').bootstrapPaginator({
+            bootstrapMajorVersion: 3,
+            onPageChanged: function(event, oldPage, newPage) {
+                loadData(newPage);
+            }
+        });
+
+    });
+    </script>
+
+</body>
+
+</html>

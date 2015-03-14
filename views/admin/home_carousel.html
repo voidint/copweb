@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="beanbag">
+    <meta name="author" content="voidint">
+
+    <title>Carousel管理 - iBeanBag</title>
+
+    <link href="/static/plugins/bootstrap-3.3.2/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/plugins/toopay-bootstrap-markdown-2.8.0/css/bootstrap-markdown.min.css" rel="stylesheet">
+    <link href="/static/plugins/font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/plugins/metisMenu-1.0.3/metisMenu.min.css" rel="stylesheet">
+    <link href="/static/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+    body {
+        padding-bottom: 30px;
+    }
+    .panel-body span.glyphicon {
+        font-size: 22px;
+        cursor: pointer;
+    }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        {{template "navbarTpl" .}}
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <!-- <div class="container-fluid"> -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3 class="page-header">{{i18n .Lang "admin_carousel_page_header"}}</h3>
+                </div>
+                <!--/.col-lg-12-->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">{{i18n .Lang "admin_carousel_panel_heading"}}</div>
+                        <div class="panel-body">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover" cellspacing="0" width="100%">
+                                    <thead align="center">
+                                        <tr>
+                                            <th style="width:20%;">{{i18n .Lang "admin_carousel_label_cover"}}</th>
+                                            <th style="width:30%;">{{i18n .Lang "admin_carousel_label_caption"}}</th>
+                                            <th style="width:20%;">{{i18n .Lang "admin_carousel_label_created"}}</th>
+                                            <th style="width:20%;">{{i18n .Lang "admin_carousel_label_modified"}}</th>
+                                            <th style="width:10%;">{{i18n .Lang "admin_carousel_label_operation"}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-id" align="center"></tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                            <div id="alert-div-id"></div>
+                            <div class="row text-center">
+                                <ul id="pagination"></ul>
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel panel-default -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    {{template "admin/tpl_footer.html"}}
+
+
+    <!-- Modal -->
+    <div id="rm-carousel-modal" class="modal fade" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">{{i18n .Lang "modal_title_info"}}</h4>
+                </div>
+                <div class="modal-body">
+                    <p>{{i18n .Lang "modal_body_want_delete"}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        {{i18n .Lang "label_btn_cancel"}}
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="rmCarouselById($('#rm-carousel-modal').data('carouselid'));">
+                        {{i18n .Lang "label_btn_ok"}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/static/plugins/jquery-1.11.1.min.js"></script>
+    <script src="/static/plugins/bootstrap-3.3.2/js/bootstrap.js"></script>
+    <script src="/static/plugins/metisMenu-1.0.3/metisMenu.min.js"></script>
+    <script src="/static/plugins/bootstrap-paginator-1.0/bootstrap-paginator.min.js"></script>
+    <script src="/static/scripts/sb-admin-2.js"></script>
+    <script src="/static/scripts/commFunc.js"></script>
+
+    <script type="text/javascript">
+    // 根据ID删除
+    function rmCarouselById(carouselId) {
+        carouselId = $.trim(carouselId);
+        $.ajax({
+            type: "POST",
+            url: "/admin/home/carousel/remove.json",
+            data: {
+                "carouselId": carouselId
+            },
+            dataType: "json",
+            success: function(jsonData) {
+                if (jsonData.Result === "success") {
+                    loadTable();
+                    $('#rm-carousel-modal').data("carouselid", "").modal('hide');
+                    return;
+                }
+                addAlert($('#alert-div-id'), jsonData.Msg, 'alert-danger');
+            },
+            error: function() {
+                addAlert($('#alert-div-id'), '{{i18n .Lang "tips_sys_err_and_contact_tech"}}', 'alert-danger');
+            }
+        });
+    };
+
+    // 置顶carousel
+    function pushpin(carouselId) {
+        carouselId = $.trim(carouselId);
+        $.ajax({
+            type: "POST",
+            url: "/admin/home/carousel/pushpin.json",
+            data: {
+                "carouselId": carouselId
+            },
+            dataType: "json",
+            success: function(jsonData) {
+                if (jsonData.Result === "success") {
+                    loadTable();
+                    return;
+                }
+                addAlert($('#alert-div-id'), jsonData.Msg, 'alert-danger');
+            },
+            error: function() {
+                addAlert($('#alert-div-id'), '{{i18n .Lang "tips_sys_err_and_contact_tech"}}', 'alert-danger');
+            }
+        });
+    };
+
+    // 生成表格行的html
+    function genRowsHtml(page) {
+        if (page == null || page.Rows == null || !(page.Rows instanceof Array) || page.Rows.length <= 0) {
+            return '<tr align="center"><td colspan="5">{{i18n .Lang "tips_no_data"}}</td></tr>';
+        }
+        var rows = page.Rows;
+        var html = [];
+        for (var i = 0, len = rows.length; i < len; i++) {
+            html.push('<tr data-carouselid="' + rows[i].Id + '">');
+            html.push('<td><img style="height:70px;" class="img-responsive img-thumbnail" src="/res' + rows[i].ImgPath + '"></td>');
+            html.push('<td>' + rows[i].Caption + '</td>');
+            html.push('<td>' + RFC3339ToIsoDateTime(rows[i].Created) + '</td>');
+            html.push('<td>' + RFC3339ToIsoDateTime(rows[i].Modified) + '</td>');
+            html.push('<td>');
+            html.push('<span class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;');
+            html.push('<span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;');
+            html.push('<span class="glyphicon glyphicon-pushpin"></span>&nbsp;&nbsp;');
+            html.push('</td>');
+            html.push('</tr>');
+        }
+        return html.join('');
+    };
+
+    function loadTable(curPageNo) {
+        if (typeof curPageNo !== "number") {
+            curPageNo = 1;
+        }
+        $.ajax({
+            type: "GET",
+            url: "/admin/home/carousel.json",
+            dataType: "json",
+            data: {
+                "curPageNo": curPageNo,
+                "pageSize": 3,
+            },
+            success: function(jsonData) {
+                if (jsonData.Result === "success") {
+                    $('#tbody-id').empty().append(genRowsHtml(jsonData.ExtObj));
+                    $('#pagination').bootstrapPaginator({
+                        totalPages: jsonData.ExtObj.TotalPages,
+                        currentPage: curPageNo,
+                    });
+                    return;
+                }
+                addAlert($('#alert-div-id'), jsonData.Msg, 'alert-danger');
+            },
+            error: function() {
+                addAlert($('#alert-div-id'), '{{i18n .Lang "tips_sys_err_and_contact_tech"}}', 'alert-danger');
+            }
+        });
+    };
+
+    $(document).ready(function() {
+        loadTable();
+
+        // 初始化分页对象
+        $('#pagination').bootstrapPaginator({
+            bootstrapMajorVersion: 3,
+            onPageChanged: function(event, oldPage, newPage) {
+                loadTable(newPage);
+            }
+        });
+
+
+        $('#tbody-id').on('click', '.glyphicon-edit', function() {
+            // 监听编辑事件
+            var carouselid = $.trim($(this).parents('tr').data('carouselid'));
+            location.href = "/admin/home/carousel/mod?carouselId=" + carouselid;
+
+        }).on('click', '.glyphicon-trash', function() {
+            // 监听删除事件
+            var carouselid = $.trim($(this).parents('tr').data('carouselid'));
+            $('#rm-carousel-modal').data("carouselid", carouselid).modal('show');
+
+        }).on('click', '.glyphicon-pushpin', function() {
+            // 监听置顶事件
+            var carouselid = $.trim($(this).parents('tr').data('carouselid'));
+            pushpin(carouselid);
+        });
+
+
+        // 监听添加事件
+        $(document).on('click', '.glyphicon-plus', function() {
+            location.href = "/admin/home/carousel/add";
+        });
+    });
+    </script>
+
+    {{template "tpl_ie_warning.html" .}}
+
+</body>
+
+</html>

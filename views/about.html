@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{template "tpl_meta.html"}}
+
+    <title>About</title>
+
+    <link href="/static/plugins/bootstrap-3.3.2/css/bootstrap.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css" media="screen">
+    body {
+        padding-top: 60px;
+        padding-bottom: 30px;
+    }
+    hr.divider {
+        margin: 30px 0px;
+    }
+    .field-required {
+        color: #E50808;
+        margin-left: 4px;
+    }
+    </style>
+
+</head>
+
+<body>
+
+    {{template "tpl_navbar.html" .}}
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <h3>Bean Bag Hire by iBeanBag</h3>
+                <p>Ambient Lounge has been providing designer bean bags to festivals, parties, corporate events, exhibitions, film nights, launches, chill out areas, weddings and many other functions since 2006.</p>
+                <p>We are currently Hiring out our bean bags on the Eastern Seaboard of Australia in Metro areas only in Melbourne, Sydney and Brisbane.</p>
+                <p>We believe in offering a great alternative to uncomfortable wooden seats, traditional sofas and lifeless chairs and at affordable prices.</p>
+                <p>Recognising the stresses involved in organising an event of any size and assisted by our team of warehouse staff and delivery drivers, we will look to accommodate any drop-off and collection time requests together with doing our best to help fit in with the colour scheme / brand involved.</p>
+                <p>Once snuggled in, most people won’t move from the blissful bean bag comfort for the rest of the event.</p>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+            <div class="col-md-3">
+            </div>
+        </div>
+
+
+        <hr class="divider">
+
+        <!-- Footer -->
+        {{template "tpl_footer.html"}}
+
+    </div>
+
+
+    <script src="/static/plugins/jquery-1.11.1.min.js"></script>
+    <script src="/static/plugins/bootstrap-3.3.2/js/bootstrap.js"></script>
+    <script src="/static/plugins/jquery.cookie.js"></script>
+    <script src="/static/scripts/portal.js"></script>
+    <script type="text/javascript">
+    </script>
+    {{template "tpl_ie_warning.html" .}}
+
+</body>
+
+</html>

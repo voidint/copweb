@@ -1,0 +1,27 @@
+<div class="panel panel-default">
+    <div class="panel-heading">{{i18n .Lang "admin_settings_personal_item_account_settings_change_pwd"}}</div>
+    <div class="panel-body">
+        <form id="changepwd-form">
+            <div class="form-group">
+                <label>{{i18n .Lang "admin_settings_personal_item_account_settings_change_pwd_label_old_pwd"}}</label>
+                <input type="password" class="form-control" id="old-pwd" name="OldPwd" maxlength="50">
+                <label class="control-label" for="old-pwd" style="display:none;"></label>
+            </div>
+            <div class="form-group">
+                <label>{{i18n .Lang "admin_settings_personal_item_account_settings_change_pwd_label_new_pwd"}}</label>
+                <input type="password" class="form-control" id="new-pwd" name="NewPwd" maxlength="50">
+                <label class="control-label" for="new-pwd" style="display:none;"></label>
+            </div>
+            <div class="form-group">
+                <label>{{i18n .Lang "admin_settings_personal_item_account_settings_change_pwd_label_confirm_new_pwd"}}</label>
+                <input type="password" class="form-control" id="confirm-pwd" name="ConfirmPwd" maxlength="50">
+                <label class="control-label" for="confirm-pwd" style="display:none;"></label>
+            </div>
+            <div class="alert-div"></div>
+            <button type="button" class="btn btn-primary" onclick="changepwd($('#changepwd-form'));">
+                {{i18n .Lang "label_btn_submit"}}
+            </button>
+        </form>
+    </div>
+    <!-- /.panel-body -->
+</div>

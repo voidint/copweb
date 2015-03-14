@@ -1,0 +1,49 @@
+{{define "tpl_navbar.html"}}
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar_resp_div_id">
+                <span class="sr-only">Toggle Navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">iBeanBag</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar_resp_div_id">
+            <ul class="nav navbar-nav">
+                <li {{if .activeMenu|eq `home`}} class="active" {{end}}>
+                    <a href="/home">{{i18n .Lang "portal_navbar_home"}}</a>
+                </li>
+                <li {{if .activeMenu|eq `products`}} class="active" {{end}}>
+                    <a href="/products">{{i18n .Lang "portal_navbar_products"}}</a>
+                </li>
+                <li {{if .activeMenu|eq `blog`}} class="active" {{end}}>
+                    <a href="/blog">{{i18n .Lang "portal_navbar_blog"}}</a>
+                </li>
+                <li {{if .activeMenu|eq `about`}} class="active" {{end}}>
+                    <a href="/about">{{i18n .Lang "portal_navbar_about"}}</a>
+                </li>
+                <li {{if .activeMenu|eq `contact`}} class="active" {{end}}>
+                    <a href="/contact">{{i18n .Lang "portal_navbar_contact"}}</a>
+                </li>
+            </ul>
+
+            <div class="hidden-sm hidden-xs pull-right" style="margin: 12px 0 0 10px;">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-xs btn-default btn-md dropdown-toggle" data-toggle="dropdown">{{i18n .Lang "label_current_lang"}}{{i18n .Lang .Lang}} <i class="caret"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        {{range .RestLangs}}
+                        <li><a href="javascript::" data-lang="{{.Lang}}" class="lang-changed">{{i18n $.Lang .Name}}</a>
+                        </li>
+                        {{end}}
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</nav>
+{{end}}
