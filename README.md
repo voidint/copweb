@@ -17,7 +17,6 @@ go get github.com/nfnt/resize
 go get github.com/oliamb/cutter
 go get github.com/satori/go.uuid
 go get github.com/slene/blackfriday
-
 ```
 - 进入`$GOPATH/src/corpweb`目录并执行`go build`命令。
 - 安装[MySQL](http://www.mysql.com/)数据库服务器。创建一个数据库如`corpweb`并在其中执行初始化SQL脚本`sql/init.sql`。
@@ -31,5 +30,11 @@ cd $GOPATH/src/corpweb
 ./corpweb
 ```
 生产环境中的部署请使用`Supervisord`工具。
+
+# 实际效果截图
+![](https://github.com/voidint/corpweb/raw/master/screenshots/home.PNG)
+![](https://github.com/voidint/corpweb/raw/master/screenshots/product.PNG)
+![](https://github.com/voidint/corpweb/raw/master/screenshots/product_item.PNG)
+![](https://github.com/voidint/corpweb/raw/master/screenshots/contact.PNG)
 
 
