@@ -31,10 +31,14 @@ cd $GOPATH/src/corpweb
 ```
 生产环境中的部署请使用`Supervisord`工具。
 
-# 实际效果截图
+# 效果图
+- 首页
 ![](https://github.com/voidint/corpweb/raw/master/screenshots/home.PNG)
+- 产品列表
 ![](https://github.com/voidint/corpweb/raw/master/screenshots/product.PNG)
+- 产品明细
 ![](https://github.com/voidint/corpweb/raw/master/screenshots/product_item.PNG)
+- 联系我们
 ![](https://github.com/voidint/corpweb/raw/master/screenshots/contact.PNG)
 
 
