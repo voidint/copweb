@@ -1,7 +1,7 @@
 package main
 
 import (
-	"copweb/conf"
+	"corpweb/conf"
 
 	_ "git.oschina.net/voidint/cms4go/routers"
 	"github.com/astaxie/beego"

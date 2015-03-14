@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"copweb/models"
+	"corpweb/models"
 
 	"github.com/astaxie/beego"
 )

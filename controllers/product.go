@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"unicode/utf8"
 
-	"copweb/models"
+	"corpweb/models"
 
 	"github.com/astaxie/beego"
 )

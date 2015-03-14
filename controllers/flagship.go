@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"copweb/models"
+	"corpweb/models"
 
 	"github.com/astaxie/beego"
 )

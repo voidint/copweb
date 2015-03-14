@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"copweb/conf"
-	"copweb/models"
-	"copweb/utils"
+	"corpweb/conf"
+	"corpweb/models"
+	"corpweb/utils"
 
 	"github.com/astaxie/beego"
 	"github.com/satori/go.uuid"

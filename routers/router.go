@@ -1,8 +1,8 @@
 package routers
 
 import (
-	"copweb/controllers"
-	// "copweb/models"
+	"corpweb/controllers"
+	// "corpweb/models"
 
 	"github.com/astaxie/beego"
 	// "github.com/astaxie/beego/context"

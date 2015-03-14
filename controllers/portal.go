@@ -7,8 +7,8 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"copweb/models"
-	"copweb/utils"
+	"corpweb/models"
+	"corpweb/utils"
 
 	"github.com/astaxie/beego"
 )
