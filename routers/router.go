@@ -2,10 +2,10 @@ package routers
 
 import (
 	"corpweb/controllers"
-	// "corpweb/models"
+	"corpweb/models"
 
 	"github.com/astaxie/beego"
-	// "github.com/astaxie/beego/context"
+	"github.com/astaxie/beego/context"
 )
 
 func init() {
@@ -84,13 +84,13 @@ func init() {
 	beego.Router("/admin/settings/changepwd", settingContr, "get:ToChangePwd")
 
 	// 登录过滤器
-	/*beego.InsertFilter("/admin/*", beego.BeforeExec, func(ctx *context.Context) {
+	beego.InsertFilter("/admin/*", beego.BeforeExec, func(ctx *context.Context) {
 		user, ok := ctx.Input.Session("UserInfo").(models.User)
 		// beego.Debug(fmt.Sprintf("filter: %t, %v", ok, user))
 
 		if !ok || len(user.UserId) <= 0 || len(user.LoginName) <= 0 {
 			ctx.Redirect(302, "/login")
 		}
-	})*/
+	})
 
 }
