@@ -51,12 +51,14 @@ USE corpweb;
 
 ## 配置
 - 修改配置文件`conf/app.conf`
+
 本项目基于beego搭建，因此多数参数都可以参照[beego参数配置说明](http://beego.me/docs/mvc/controller/config.md)，以下配置项为项目自定义的配置项说明：
 `dbname:` 数据库名称
 `dbusername:` 数据库登录用户账号
 `dbuserpwd:` 数据库登录用户密码
 
 - 设置环境变量
+
 `RESOURCE_HOME:` 用于指定资源（当前主要是用户上传的图片）的根路径，若未设置该环境变量，默认的资源根路径会是项目目录下的resource目录。
 
 ## 运行
