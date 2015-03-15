@@ -54,7 +54,9 @@ USE corpweb;
 
 本项目基于beego搭建，因此多数参数都可以参照[beego参数配置说明](http://beego.me/docs/mvc/controller/config.md)，以下配置项为项目自定义的配置项说明：
 > dbname: 数据库名称
+>
 > dbusername: 数据库登录用户账号
+>
 > dbuserpwd: 数据库登录用户密码
 
 - 设置环境变量
@@ -68,6 +70,9 @@ cd $GOPATH/src/corpweb
 ./corpweb
 ```
 生产环境中的部署请使用`Supervisord`工具。
+
+## 后台登录
+初始化SQL脚本中包含了一条账号名`voidint@126.com`密码`123456`的记录，建议修改初始化脚本中的账号名，待登录后立即修改密码。登录地址为`http://localhost/login`，实际运行后，请将`localhost`修改为实际的域名或者IP。
 
 ## 效果图
 - 首页
