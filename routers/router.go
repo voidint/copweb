@@ -87,10 +87,6 @@ func init() {
 	beego.InsertFilter("/admin/*", beego.BeforeRouter, func(ctx *context.Context) {
 		user, ok := ctx.Input.Session("UserInfo").(models.User)
 
-		/*for k, v := range ctx.Input.Params {
-			beego.Info(fmt.Sprintf("%s --> %v", k, v))
-		}*/
-
 		if !ok || len(user.UserId) <= 0 || len(user.LoginName) <= 0 {
 			ctx.Redirect(302, "/login")
 		}

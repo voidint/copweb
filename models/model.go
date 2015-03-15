@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 
 	"github.com/astaxie/beego"
@@ -223,7 +224,14 @@ func init() {
 	// x, err := xorm.NewEngine("mysql", "root:abc#123@/test")//错误方式
 
 	var err error
-	x, err = xorm.NewEngine("mysql", "root:abc#123@/cms4go?charset=utf8")
+	// x, err = xorm.NewEngine("mysql", "root:abc#123@/cms4go?charset=utf8")
+
+	dbname := beego.AppConfig.String("dbname")
+	dbusername := beego.AppConfig.String("dbusername")
+	dbuserpwd := beego.AppConfig.String("dbuserpwd")
+	dsname := fmt.Sprintf("%s:%s@/%s?charset=utf8", dbusername, dbuserpwd, dbname)
+
+	x, err = xorm.NewEngine("mysql", dsname)
 
 	if err != nil {
 		beego.Error(err)
