@@ -35,6 +35,8 @@ func (this *BlogController) ToEditBlog() {
 
 	blogId := this.Ctx.Input.Param(":blogId")
 
+	// beego.Info(fmt.Sprintf("blogId:%s", blogId))
+
 	blog, has, err := models.GetBlogById(blogId, true)
 	if err != nil {
 		beego.Error(fmt.Sprintf("models.GetBlogById(%s) err:%s", blogId, err))

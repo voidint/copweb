@@ -140,6 +140,9 @@ func GetBlogs(cond *Blog, lim *Limiter, lazy bool) (list []*Blog, err error) {
 }
 
 func GetBlogById(id string, lazy bool) (blog *Blog, has bool, err error) {
+	if len(id) == 0 {
+		return nil, false, nil
+	}
 	blog = &Blog{Id: id}
 	has, err = x.Get(blog)
 	if err != nil {

@@ -127,9 +127,15 @@ func (this *PortalController) GetProducts() {
 
 // ToProductItem 跳转至产品明细
 func (this *PortalController) ToProductItem() {
-	beego.Debug("PortalController.ProductItem()...")
-
 	prodId := this.Ctx.Input.Param(":prodId")
+
+	// beego.Info(fmt.Sprintf("prodId:%s", prodId))
+
+	if len(prodId) == 0 {
+		// 重定向至404
+		this.Abort("404")
+	}
+
 	cond := &models.Product{
 		Id:       prodId,
 		IsPublic: models.ACCESSABLE_PUBLIC,

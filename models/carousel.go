@@ -88,6 +88,9 @@ func GetCarousels(cond *Carousel, lim *Limiter) (list []*Carousel, err error) {
 }
 
 func GetCarouselById(id string) (carousel *Carousel, has bool, err error) {
+	if len(id) == 0 {
+		return nil, false, nil
+	}
 	carousel = &Carousel{Id: id}
 	has, err = x.Get(carousel)
 	if err != nil {
