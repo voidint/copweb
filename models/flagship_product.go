@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -86,4 +88,34 @@ func PushPinFlagshipProduct(id string) (affected int64, err error) {
 		return 0, err
 	}
 	return result.RowsAffected()
+}
+
+func GetFlagshipProductPage(cond *FlagshipProduct, curPageNo, pageSize int, lazy bool) (page *Page, err error) {
+	if cond == nil {
+		cond = &FlagshipProduct{}
+	}
+
+	totalRecords, err := CountFlagshipProducts(cond)
+	if err != nil {
+		beego.Error(fmt.Sprintf("CountFlagshipProducts(%#v) err:%s", cond, err))
+		return nil, err
+	}
+
+	pager := NewPager(reflect.TypeOf(cond), curPageNo, pageSize, int(totalRecords))
+
+	if totalRecords <= 0 {
+		return page, nil
+	}
+
+	lim := pager.BuildLimiter()
+	rows, err := GetFlagshipProducts(cond, lim.Limit, lim.Offset, lazy)
+	if err != nil {
+		beego.Error(fmt.Sprintf("GetFlagshipProducts(%#v,%d,%d,%t) err:%s\n", cond, lim.Limit, lim.Offset, lazy, err))
+		return nil, err
+	}
+	for i := range rows {
+		pager.AddRow(rows[i])
+	}
+
+	return pager.BuildPage(), nil
 }

@@ -37,14 +37,6 @@ func (this *FlagshipProductController) GetFlagshipProducts() {
 	curPageNo, _ := this.GetInt("curPageNo")
 	pageSize, _ := this.GetInt("pageSize")
 
-	if curPageNo <= 0 {
-		curPageNo = 1
-	}
-
-	if pageSize <= 0 {
-		pageSize = 5
-	}
-
 	cond := models.FlagshipProduct{}
 	if err := this.ParseForm(&cond); err != nil {
 		beego.Error(fmt.Printf("this.ParseForm() err: %s", err))
@@ -52,36 +44,17 @@ func (this *FlagshipProductController) GetFlagshipProducts() {
 		return
 	}
 
-	totalRecords, err := models.CountFlagshipProducts(&cond)
+	page, err := models.GetFlagshipProductPage(&cond, curPageNo, pageSize, false)
 	if err != nil {
-		beego.Error(fmt.Printf("models.CountFlagshipProducts(%#v) err: %s", &cond, err))
 		resp.Msg = this.Tr("tips_sys_err_and_contact_tech")
 		return
 	}
 
-	if totalRecords <= 0 {
-		resp.Result = RESULT_RESP_SUCC
-		extMap := make(map[string]interface{}, 2)
-		extMap["rows"] = make([]*models.FlagshipProduct, 0)
-		extMap["totalPages"] = 0
-		resp.ExtMap = extMap
-		return
+	if page == nil {
+		page = models.EmptyPage(curPageNo, pageSize)
 	}
 
-	startRecordNo, _ := this.CalcStartRecordNo(int64(curPageNo), int64(pageSize), totalRecords)
-	fProds, err := models.GetFlagshipProducts(&cond, pageSize, int(startRecordNo), false)
-	if err != nil {
-		beego.Error(fmt.Printf("models.GetFlagshipProducts(%#v,%d,%d) err: %s", &cond, pageSize, startRecordNo, false, err))
-		resp.Msg = this.Tr("tips_sys_err_and_contact_tech")
-		return
-	}
-
-	extMap := make(map[string]interface{}, 2)
-	extMap["rows"] = fProds
-	totalPages, _ := this.CalcTotalPages(int64(pageSize), totalRecords)
-	extMap["totalPages"] = totalPages
-
-	resp.ExtMap = extMap
+	resp.ExtObj = page
 	resp.Result = RESULT_RESP_SUCC
 	resp.Msg = this.Tr("tips_action_success")
 }
@@ -90,6 +63,7 @@ func (this *FlagshipProductController) GetFlagshipProducts() {
 func (this *FlagshipProductController) AjaxGetProductsButFlagships() {
 	resp := AjaxFormResp{
 		Result: RESULT_RESP_FAIL,
+		Msg:    this.Tr("tips_action_fail"),
 	}
 	defer func() {
 		this.Data["json"] = &resp
@@ -99,52 +73,26 @@ func (this *FlagshipProductController) AjaxGetProductsButFlagships() {
 	curPageNo, _ := this.GetInt("curPageNo")
 	pageSize, _ := this.GetInt("pageSize")
 
-	if curPageNo <= 0 {
-		curPageNo = 1
-	}
-
-	if pageSize <= 0 {
-		pageSize = 5
-	}
-
-	prodCond := models.Product{}
-	if err := this.ParseForm(&prodCond); err != nil {
+	cond := models.Product{}
+	if err := this.ParseForm(&cond); err != nil {
 		beego.Error(fmt.Printf("this.ParseForm() err: %s", err))
 		resp.Msg = this.Tr("tips_sys_err_and_contact_tech")
 		return
 	}
 
-	totalRecords, err := models.CountProductsButFlagships(&prodCond)
+	page, err := models.GetProductsButFlagshipsPage(&cond, curPageNo, pageSize, false)
 	if err != nil {
-		beego.Error(fmt.Printf("models.CountProductsButFlagships(%#v) err: %s", &prodCond, err))
 		resp.Msg = this.Tr("tips_sys_err_and_contact_tech")
 		return
 	}
 
-	if totalRecords <= 0 {
-		extMap := make(map[string]interface{}, 2)
-		extMap["rows"] = make([]*models.Product, 0)
-		extMap["totalPages"] = 0
-		resp.ExtMap = extMap
-		resp.Result = RESULT_RESP_SUCC
-		return
+	if page == nil {
+		page = models.EmptyPage(curPageNo, pageSize)
 	}
 
-	startRecordNo, _ := this.CalcStartRecordNo(int64(curPageNo), int64(pageSize), totalRecords)
-	prods, err := models.GetProductsButFlagships(&prodCond, pageSize, int(startRecordNo), false)
-	if err != nil {
-		beego.Error(fmt.Printf("models.GetProductsButFlagships(%#v,%d,%d) err: %s", &prodCond, pageSize, startRecordNo, false, err))
-		resp.Msg = this.Tr("tips_sys_err_and_contact_tech")
-		return
-	}
-
-	extMap := make(map[string]interface{}, 2)
-	extMap["rows"] = prods
-	totalPages, _ := this.CalcTotalPages(int64(pageSize), totalRecords)
-	extMap["totalPages"] = totalPages
-
-	resp.ExtMap = extMap
+	resp.ExtObj = page
 	resp.Result = RESULT_RESP_SUCC
+	resp.Msg = this.Tr("tips_action_success")
 
 }
 

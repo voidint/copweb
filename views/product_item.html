@@ -99,10 +99,10 @@ respond.min.js"></script>
             </div>
 
             <div class="col-md-4">
-                <h3>Introduction</h3>
+                <h3>{{i18n .Lang "portal_prod_item_intro"}}</h3>
                 <p>{{.prod.Intro}}</p>
 
-                <h3>Description</h3> {{str2html .prod.Desc}}
+                <h3>{{i18n .Lang "portal_prod_item_desc"}}</h3> {{str2html .prod.Desc}}
             </div>
 
         </div>

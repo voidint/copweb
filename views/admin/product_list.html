@@ -178,7 +178,7 @@
     // 生成表格行的html
     function genRowsHtml(rows) {
         if (rows == null || !rows instanceof Array || rows.length <= 0) {
-            return '<tr align="center"><td colspan="5">{{i18n .Lang "tips_no_data"}}</td></tr>';
+            return '<tr align="center"><td colspan="6">{{i18n .Lang "tips_no_data"}}</td></tr>';
         }
 
         var html = [];
@@ -216,15 +216,16 @@
             type: "GET",
             url: "/admin/products.json",
             data: {
-                "curPageNo": curPageNo
+                "curPageNo": curPageNo,
+                "pageSize": 5,
             },
             dataType: "json",
             success: function(jsonData) {
                 if (jsonData.Result === "success") {
-                    $('#data-div-id').empty().append(genRowsHtml(jsonData.ExtMap.rows));
-                    var pages = jsonData.ExtMap["totalPages"];
+                    $('#data-div-id').empty().append(genRowsHtml(jsonData.ExtObj.Rows));
+                    var pages = jsonData.ExtObj.TotalPages;
                     $('#pagination').bootstrapPaginator({
-                        totalPages: pages,
+                        totalPages: pages <= 0 ? 1 : pages,
                         currentPage: curPageNo,
                     });
                 }

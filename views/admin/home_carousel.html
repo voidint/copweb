@@ -213,8 +213,9 @@
             success: function(jsonData) {
                 if (jsonData.Result === "success") {
                     $('#tbody-id').empty().append(genRowsHtml(jsonData.ExtObj));
+                    var pages = jsonData.ExtObj.TotalPages;
                     $('#pagination').bootstrapPaginator({
-                        totalPages: jsonData.ExtObj.TotalPages,
+                        totalPages: pages <= 0 ? 1 : pages,
                         currentPage: curPageNo,
                     });
                     return;

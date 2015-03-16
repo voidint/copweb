@@ -255,7 +255,7 @@
     // 生成表格行的html
     function genRowsHtml(rows) {
         if (rows == null || !rows instanceof Array || rows.length <= 0) {
-            return '<tr align="center"><td colspan="4">{{i18n .Lang "tips_no_data"}}</td></tr>';
+            return '<tr align="center"><td colspan="5">{{i18n .Lang "tips_no_data"}}</td></tr>';
         }
         var html = [];
         for (var i = 0, len = rows.length; i < len; i++) {
@@ -299,10 +299,10 @@
             },
             success: function(jsonData) {
                 if (jsonData.Result === "success") {
-                    $('#tbody-id').empty().append(genRowsHtml(jsonData.ExtMap.rows));
-                    var pages = jsonData.ExtMap["totalPages"];
+                    $('#tbody-id').empty().append(genRowsHtml(jsonData.ExtObj.Rows));
+                    var pages = jsonData.ExtObj.TotalPages;
                     $('#pagination').bootstrapPaginator({
-                        totalPages: pages,
+                        totalPages: pages <= 0 ? 1 : pages,
                         currentPage: curPageNo,
                     });
                     return;
@@ -353,10 +353,11 @@
             dataType: "json",
             success: function(jsonData) {
                 if (jsonData.Result === "success") {
-                    $('#products-tbody-id').empty().append(genProductRowsHtml(jsonData.ExtMap.rows));
-                    var pages = jsonData.ExtMap["totalPages"];
+                    $('#products-tbody-id').empty().append(genProductRowsHtml(jsonData.ExtObj.Rows));
+                    var pages = jsonData.ExtObj.TotalPages;
                     $('#prod-pagination').bootstrapPaginator({
-                        totalPages: pages
+                        totalPages: pages <= 0 ? 1 : pages,
+                        currentPage: curPageNo,
                     });
                 }
             },

@@ -144,6 +144,16 @@ type Page struct {
 	Rows         []interface{} // 当前页记录
 }
 
+func EmptyPage(curPageNo, pageSize int) *Page {
+	return &Page{
+		CurPageNo:    curPageNo,
+		PageSize:     pageSize,
+		TotalRecords: 0,
+		TotalPages:   0,
+		Rows:         make([]interface{}, 0),
+	}
+}
+
 // CalcTotalPages 计算总页数
 func CalcTotalPages(pageSize, totalRecords int) (totalPages int, err error) {
 	if pageSize == 0 {

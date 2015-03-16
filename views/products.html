@@ -134,11 +134,19 @@
             type: "GET",
             url: "/products.json",
             data: {
-                "curPageNo": curPageNo
+                "curPageNo": curPageNo,
+                "pageSize": 4,
             },
             dataType: "json",
             success: function(jsonData) {
                 if (jsonData.Result === 'success') {
+                    if (jsonData.ExtMap == null || typeof jsonData.ExtMap !== 'object' || jsonData.ExtMap.rows == null || !(jsonData.ExtMap.rows instanceof Array)) {
+                        return;
+                    }
+                    if (jsonData.ExtMap.rows.length == 0) {
+                        $('#products-div-id').empty().append('<p class="text-center">{{i18n .Lang "tips_no_data"}}</p>');
+                        return;
+                    }
                     var rowsHtml = "";
                     var rows = jsonData.ExtMap.rows;
                     for (var i = 0, len = rows.length; i < len; i++) {
@@ -147,7 +155,7 @@
                     $('#products-div-id').empty().append(rowsHtml);
                     var pages = jsonData.ExtMap["totalPages"];
                     $('#pagination').bootstrapPaginator({
-                        totalPages: pages,
+                        totalPages: pages <= 0 ? 1 : pages,
                         currentPage: curPageNo,
                     });
                     return;

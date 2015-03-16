@@ -4,8 +4,9 @@ import (
 	"corpweb/controllers"
 	"corpweb/models"
 
+	"code.google.com/p/go.net/context"
+
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/context"
 )
 
 func init() {

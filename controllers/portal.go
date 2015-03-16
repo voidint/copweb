@@ -51,7 +51,11 @@ func (this *PortalController) ToProducts() {
 func (this *PortalController) GetProducts() {
 	resp := AjaxFormResp{
 		Result: RESULT_RESP_FAIL,
+		Msg:    this.Tr("tips_action_fail"),
+		ExtMap: make(map[string]interface{}, 2),
 	}
+	resp.ExtMap["totalPages"] = 0
+
 	defer func() {
 		this.Data["json"] = &resp
 		this.ServeJson(true)
@@ -60,43 +64,25 @@ func (this *PortalController) GetProducts() {
 	curPageNo, _ := this.GetInt("curPageNo")
 	pageSize, _ := this.GetInt("pageSize")
 
-	if curPageNo <= 0 {
-		curPageNo = 1
-	}
-
-	if pageSize <= 0 {
-		pageSize = 6
-	}
 	cond := &models.Product{IsPublic: models.ACCESSABLE_PUBLIC}
-	totalRecords, err := models.CountProducts(cond)
+	page, err := models.GetProductPage(cond, curPageNo, pageSize, false)
 	if err != nil {
-		beego.Error(fmt.Printf("models.CountProducts(%#v) err: %s", cond, err))
-		resp.Msg = this.Tr("tips_sys_err_and_contact_tech")
+		resp.Msg = this.Tr("tips_server_err")
 		return
 	}
 
-	if totalRecords <= 0 {
+	if page == nil || len(page.Rows) == 0 {
 		resp.Result = RESULT_RESP_SUCC
+		resp.Msg = this.Tr("tips_action_success")
 		return
 	}
 
-	startRecordNo, _ := this.CalcStartRecordNo(int64(curPageNo), int64(pageSize), totalRecords)
-	prodCond := &models.Product{IsPublic: models.ACCESSABLE_PUBLIC}
-	prods, err := models.GetProducts(prodCond, pageSize, int(startRecordNo), false)
-	if err != nil {
-		beego.Error(fmt.Printf("models.GetProducts(%#v,%d,%d) err: %s", prodCond, pageSize, startRecordNo, false, err))
-		resp.Msg = this.Tr("tips_sys_err_and_contact_tech")
-		return
-	}
-
+	prods := page.Rows
 	prodLen := len(prods)
-	if prodLen == 0 {
-		resp.Result = RESULT_RESP_SUCC
-		return
-	}
 
-	// 2 items per row
+	// 计算产品页中产品行数（每行2个产品）
 	rowLen := 0
+	// 页面上每行显示2个产品
 	if prodLen%2 == 0 {
 		rowLen = prodLen / 2
 	} else {
@@ -107,22 +93,18 @@ func (this *PortalController) GetProducts() {
 	for i := 0; i < prodLen; i = i + 2 {
 		if i%2 == 0 {
 			row := make([]*models.Product, 0, 2)
-			row = append(row, prods[i])
+			row = append(row, prods[i].(*models.Product))
 			if i+1 < prodLen {
-				row = append(row, prods[i+1])
+				row = append(row, prods[i+1].(*models.Product))
 			}
 			rows = append(rows, row)
 		}
 	}
 
-	extMap := make(map[string]interface{}, 2)
-	extMap["rows"] = rows
-	totalPages, _ := this.CalcTotalPages(int64(pageSize), totalRecords)
-	extMap["totalPages"] = totalPages
-
-	resp.ExtMap = extMap
 	resp.Result = RESULT_RESP_SUCC
 	resp.Msg = this.Tr("tips_action_success")
+	resp.ExtMap["rows"] = rows
+	resp.ExtMap["totalPages"] = page.TotalPages
 }
 
 // ToProductItem 跳转至产品明细
@@ -187,6 +169,10 @@ func (this *PortalController) AjaxGetBlogPage() {
 	if err != nil {
 		resp.Msg = this.Tr("tips_sys_err_and_contact_tech")
 		return
+	}
+
+	if page == nil {
+		page = models.EmptyPage(curPageNo, pageSize)
 	}
 
 	for i := range page.Rows {

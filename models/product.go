@@ -1,7 +1,9 @@
 package models
 
 import (
+	"fmt"
 	"html"
+	"reflect"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -264,6 +266,36 @@ func GetProducts(cond *Product, limit, offset int, lazy bool) ([]*Product, error
 	return prods, err
 }
 
+func GetProductsButFlagshipsPage(cond *Product, curPageNo, pageSize int, lazy bool) (page *Page, err error) {
+	if cond == nil {
+		cond = &Product{}
+	}
+
+	totalRecords, err := CountProductsButFlagships(cond)
+	if err != nil {
+		beego.Error(fmt.Sprintf("CountProductsButFlagships(%#v) err:%s", cond, err))
+		return nil, err
+	}
+
+	pager := NewPager(reflect.TypeOf(cond), curPageNo, pageSize, int(totalRecords))
+
+	if totalRecords <= 0 {
+		return page, nil
+	}
+
+	lim := pager.BuildLimiter()
+	rows, err := GetProductsButFlagships(cond, lim.Limit, lim.Offset, lazy)
+	if err != nil {
+		beego.Error(fmt.Sprintf("GetProductsButFlagships(%#v,%d,%d,%t) err:%s", cond, lim.Limit, lim.Offset, lazy, err))
+		return nil, err
+	}
+	for i := range rows {
+		pager.AddRow(rows[i])
+	}
+
+	return pager.BuildPage(), nil
+}
+
 func CountProductsButFlagships(cond *Product) (int64, error) {
 	if cond == nil {
 		cond = &Product{}
@@ -297,4 +329,35 @@ func GetProductsButFlagships(cond *Product, limit, offset int, lazy bool) ([]*Pr
 		}
 	}
 	return prods, err
+}
+
+func GetProductPage(cond *Product, curPageNo, pageSize int, lazy bool) (page *Page, err error) {
+	if cond == nil {
+		cond = &Product{}
+	}
+
+	totalRecords, err := CountProducts(cond)
+	if err != nil {
+		beego.Error(fmt.Sprintf("CountProducts(%#v) err:%s", cond, err))
+		return nil, err
+	}
+
+	pager := NewPager(reflect.TypeOf(cond), curPageNo, pageSize, int(totalRecords))
+
+	if totalRecords <= 0 {
+		return page, nil
+	}
+
+	lim := pager.BuildLimiter()
+	rows, err := GetProducts(cond, lim.Limit, lim.Offset, lazy)
+	if err != nil {
+		beego.Error(fmt.Sprintf("GetProducts(%#v,%d,%d,%t) err:%s", cond, lim.Limit, lim.Offset, lazy, err))
+		return nil, err
+
+	}
+	for i := range rows {
+		pager.AddRow(rows[i])
+	}
+
+	return pager.BuildPage(), nil
 }
