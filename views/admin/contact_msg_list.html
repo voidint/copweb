@@ -350,7 +350,7 @@
                     $('#data-div-id').empty().append(genRowsHtml(jsonData.ExtObj));
                     var pages = jsonData.ExtObj.TotalPages;
                     $('#pagination').bootstrapPaginator({
-                        totalPages: pages,
+                        totalPages: pages <= 0 ? 1 : pages,
                         currentPage: curPageNo,
                     });
                     return;

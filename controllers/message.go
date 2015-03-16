@@ -50,6 +50,10 @@ func (this *MessageController) AjaxGetContactMsgPage() {
 		return
 	}
 
+	if page == nil {
+		page = models.EmptyPage(curPageNo, pageSize)
+	}
+
 	resp.Result = RESULT_RESP_SUCC
 	resp.Msg = this.Tr("tips_action_success")
 	resp.ExtObj = page
