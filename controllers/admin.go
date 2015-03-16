@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"corpweb/conf"
-	"corpweb/models"
 	"corpweb/utils"
 
 	"github.com/astaxie/beego"
@@ -24,12 +23,6 @@ type AdminController struct {
 func (this *AdminController) Index() {
 	this.Data["menu_lv_1"] = "dashboard"
 	this.Data["menu_lv_2"] = ""
-
-	user, ok := this.Ctx.Input.Session("UserInfo").(models.User)
-	beego.Info(fmt.Sprintf("session: %t, %v", ok, user))
-
-	email, ok := this.Ctx.Input.Session("LoginEmail").(string)
-	beego.Info(fmt.Sprintf("session: %t, %s", ok, email))
 
 	this.TplNames = "admin/index.html"
 }
