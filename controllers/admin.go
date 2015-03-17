@@ -62,7 +62,7 @@ func (this *AdminController) ImgUpload() {
 
 	// 转储图片文件
 	newFileName := uuid.NewV4().String() + strings.ToLower(filepath.Ext(fHeader.Filename))
-	err = this.SaveToFile("file", conf.Resource_Home+"/image/source/"+newFileName)
+	err = this.SaveToFile("file", conf.ResourceHome+"/image/source/"+newFileName)
 	if err != nil {
 		beego.Error(err)
 		ajaxResp.Msg = this.Tr("tips_sys_err_and_contact_tech")
@@ -112,7 +112,7 @@ func (this *AdminController) ImgCrop() {
 		return
 	}
 
-	srcImg, err := os.Open(strings.Replace(coord.Imgpath, "/res/", conf.Resource_Home+"/", 1))
+	srcImg, err := os.Open(strings.Replace(coord.Imgpath, "/res/", conf.ResourceHome+"/", 1))
 	if err != nil {
 		beego.Error(err)
 		ajaxResp.Msg = "源图片或已不存在，请重新上传图片。"
@@ -120,7 +120,7 @@ func (this *AdminController) ImgCrop() {
 	}
 
 	dstImgName := uuid.NewV4().String() + fileExt
-	dstImg, err := os.Create(conf.Resource_Home + "/image/" + dstImgName)
+	dstImg, err := os.Create(conf.ResourceHome + "/image/" + dstImgName)
 	if err != nil {
 		beego.Error(err)
 		ajaxResp.Msg = "无法在目标目录下创建文件，请联系技术人员。"
