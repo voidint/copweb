@@ -7,36 +7,34 @@
     <title>{{i18n .Lang "portal_title_contact"}}</title>
 
     <link href="/static/plugins/bootstrap-3.3.2/css/bootstrap.css" rel="stylesheet">
-
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
     <style type="text/css" media="screen">
     body {
         padding-top: 60px;
         padding-bottom: 30px;
     }
+    
     hr.divider {
         margin: 30px 0px;
     }
+    
     .field-required {
         color: #E50808;
         margin-left: 4px;
     }
     </style>
-
 </head>
 
 <body>
-
     {{template "tpl_navbar.html" .}}
-
-
+    
     <div class="container">
-
         <!-- Page Heading/Breadcrumbs -->
         <div class="row">
             <div class="col-lg-12">
@@ -52,7 +50,6 @@
             </div>
         </div>
         <!-- /.row -->
-
         <div class="row">
             <div class="col-sm-6">
                 <form id="msg-form-id">
@@ -62,58 +59,46 @@
                         <input class="form-control" type="text" id="name-input-id" name="Name" maxlength="50" placeholder='{{i18n .Lang "portal_contact_placeholder_name"}}'>
                         <label class="control-label" for="name-input-id" style="display:none;"></label>
                     </div>
-
                     <div class="form-group">
                         <label>{{i18n .Lang "portal_contact_label_email"}}<span class="field-required">*</span>
                         </label>
                         <input class="form-control" type="text" id="email-input-id" name="Email" maxlength="100" placeholder='{{i18n .Lang "portal_contact_placeholder_email"}}'>
                         <label class="control-label" for="email-input-id" style="display:none;"></label>
                     </div>
-
                     <div class="form-group">
                         <label>{{i18n .Lang "portal_contact_label_phone"}}<span class="field-required">*</span>
                         </label>
                         <input class="form-control" type="text" id="phone-input-id" name="Phone" maxlength="20" placeholder='{{i18n .Lang "portal_contact_placeholder_phone"}}'>
                         <label class="control-label" for="phone-input-id" style="display:none;"></label>
                     </div>
-
                     <div class="form-group">
                         <label>{{i18n .Lang "portal_contact_label_company"}}</label>
                         <input class="form-control" type="text" id="compney-input-id" name="Company" maxlength="150" placeholder='{{i18n .Lang "portal_contact_placeholder_company"}}'>
                         <label class="control-label" for="compney-input-id" style="display:none;"></label>
                     </div>
-
                     <div class="form-group">
                         <label>{{i18n .Lang "portal_contact_label_message"}}</label>
                         <textarea class="form-control" id="text-textarea-id" name="Text" onkeyup="limitChars($(this), 1024)" placeholder='{{i18n .Lang "portal_contact_placeholder_message"}}' rows="3"></textarea>
                         <label class="control-label" for="text-textarea-id" style="display:none;"></label>
                     </div>
-
                     <div class="form-group" id="alert-div-id"></div>
-
                     <button type="button" class="btn btn-primary btn-block" onclick="addContactMsg()">{{i18n .Lang "label_btn_submit"}}</button>
                 </form>
             </div>
-
             <div class="col-sm-6">
                 <h4>CALL US ON 1300 707 121 AUSTRALIA WIDE</h4>
                 <h4>Office Locations</h4>
                 <h5>BEAN BAG HIRE MELBOURNE</h5>
-
                 <p>2-4 Mephan Street Maribyrnong VIC 3032</p>
                 <p>Telephone: 1300 707 121</p>
             </div>
         </div>
 
-
-
         <hr class="divider">
 
         <!-- Footer -->
         {{template "tpl_footer.html"}}
-
     </div>
-
     <script src="/static/plugins/jquery-1.11.1.min.js"></script>
     <script src="/static/plugins/bootstrap-3.3.2/js/bootstrap.js"></script>
     <script src="/static/plugins/jquery.cookie.js"></script>
@@ -135,7 +120,6 @@
         } else {
             $("label[for='name-input-id']").hide().parent('div').removeClass('has-error');
         }
-
         var email = $.trim($('#email-input-id').val());
         if (!/^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/.test(email)) {
             var title = '{{i18n .Lang "tips_invalid_email"}}';
@@ -144,7 +128,6 @@
         } else {
             $("label[for='email-input-id']").hide().parent('div').removeClass('has-error');
         }
-
         var phone = $.trim($('#phone-input-id').val());
         //if(!/^((\+86)|(86))?(1(([35][0-9])|(47)|[8][012356789]))\d{8}$/.test(phone) || !/^(0\d{2,3}(\-)?)?\d{7,8}$/.test(phone)){
         if (phone.length === 0) {
@@ -154,17 +137,14 @@
         } else {
             $("label[for='phone-input-id']").hide().parent('div').removeClass('has-error');
         }
-
         return valid;
     }
 
     function addContactMsg() {
         $('#alert-div-id').empty();
-
         if (!formValid()) {
             return;
         }
-
         $.ajax({
             url: "/contact/msg/add",
             type: "POST",
@@ -190,7 +170,6 @@
         });
     }
     </script>
-
     {{template "tpl_ie_warning.html" .}}
 </body>
 

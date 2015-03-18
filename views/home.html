@@ -7,39 +7,40 @@
     <title>{{i18n .Lang "portal_title_home"}}</title>
 
     <link href="/static/plugins/bootstrap-3.3.2/css/bootstrap.css" rel="stylesheet">
-
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
     <style type="text/css" media="screen">
     body {
         padding-top: 20px;
         padding-bottom: 30px;
     }
+    
     .carousel {
         height: 650px;
     }
+    
     .carousel .item {
         height: 650px;
     }
+    
     .carousel img {
         width: 100%;
     }
+    
     hr.divider {
         margin: 30px 0px;
     }
     </style>
-
 </head>
 
 <body>
-
     {{template "tpl_navbar.html" .}}
 
-    
     <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
         <ol class="carousel-indicators">
@@ -47,7 +48,6 @@
             <li data-target="#carousel-example-generic" data-slide-to="{{$index}}" {{if $index|eq 0}}class="active" {{end}}></li>
             {{end}}
         </ol>
-
         <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
             {{range $index,$element := .carousels}}
@@ -59,7 +59,6 @@
             </div>
             {{end}}
         </div>
-
         <!-- Controls -->
         <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
             <span class="glyphicon glyphicon-chevron-left"></span>
@@ -84,7 +83,7 @@
         </div>
 
         <hr class="divider">
-
+        
         <!-- Footer -->
         {{template "tpl_footer.html"}}
     </div>
@@ -95,7 +94,5 @@
     <script src="/static/scripts/portal.js"></script>
 
     {{template "tpl_ie_warning.html" .}}
-
 </body>
-
 </html>
