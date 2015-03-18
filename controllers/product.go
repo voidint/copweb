@@ -64,7 +64,9 @@ func (this *ProductController) ToProductMod() {
 	this.Data["menu_lv_1"] = "prod"
 	this.Data["menu_lv_2"] = "prod_list"
 
-	prodId := this.GetString("prodId")
+	// prodId := this.GetString("prodId")
+	prodId := this.Ctx.Input.Param(":prodId")
+
 	cond := &models.Product{Id: prodId}
 	prods, err := models.GetProducts(cond, 1, 0, false)
 

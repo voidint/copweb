@@ -250,7 +250,7 @@
         $('#data-div-id').on('click', '.glyphicon-edit', function() {
             // 监听编辑产品事件
             var prodId = $.trim($(this).parents('tr').data('prodid'));
-            location.href = "/admin/product/mod?prodId=" + prodId;
+            location.href = "/admin/product/edit/" + prodId;
 
         }).on('click', '.glyphicon-trash', function() {
             // 监听删除产品事件

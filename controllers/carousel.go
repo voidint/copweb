@@ -39,7 +39,9 @@ func (this *CarouselController) ToModCarousel() {
 	this.Data["menu_lv_1"] = "home"
 	this.Data["menu_lv_2"] = "carousel"
 
-	carouselId := this.GetString("carouselId")
+	// carouselId := this.GetString("carouselId")
+	carouselId := this.Ctx.Input.Param(":carouselId")
+
 	carousel, has, err := models.GetCarouselById(carouselId)
 	if err != nil {
 		beego.Error(err)

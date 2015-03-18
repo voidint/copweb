@@ -243,7 +243,7 @@
         $('#tbody-id').on('click', '.glyphicon-edit', function() {
             // 监听编辑事件
             var carouselid = $.trim($(this).parents('tr').data('carouselid'));
-            location.href = "/admin/home/carousel/mod?carouselId=" + carouselid;
+            location.href = "/admin/home/carousel/edit/" + carouselid;
 
         }).on('click', '.glyphicon-trash', function() {
             // 监听删除事件

@@ -31,7 +31,7 @@ func init() {
 	prodContr := &controllers.ProductController{}
 	beego.Router("/admin/product/add", prodContr, "get:ToProductAdd")
 	beego.Router("/admin/product/add.json", prodContr, "post:AddProduct")
-	beego.Router("/admin/product/mod", prodContr, "get:ToProductMod")
+	beego.Router("/admin/product/edit/:prodId", prodContr, "get:ToProductMod")
 	beego.Router("/admin/product/mod.json", prodContr, "post:ModProduct")
 	beego.Router("/admin/product", prodContr, "get:ToProducts")
 	beego.Router("/admin/products.json", prodContr, "get:AjaxGetProductList")
@@ -41,7 +41,7 @@ func init() {
 	caroContr := &controllers.CarouselController{}
 	beego.Router("/admin/home/carousel", caroContr, "get:ToCarousel")
 	beego.Router("/admin/home/carousel/add", caroContr, "get:ToAddCarousel")
-	beego.Router("/admin/home/carousel/mod", caroContr, "get:ToModCarousel")
+	beego.Router("/admin/home/carousel/edit/:carouselId", caroContr, "get:ToModCarousel")
 	beego.Router("/admin/home/carousel.json", caroContr, "get:GetCarousels")
 	beego.Router("/admin/home/carousel/add.json", caroContr, "post:AddCarousel")
 	beego.Router("/admin/home/carousel/mod.json", caroContr, "post:ModCarousel")
