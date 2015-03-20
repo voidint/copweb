@@ -1,0 +1,48 @@
+{{define "admin/tpl_mail.html"}}
+<div class="modal fade mail-modal" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">{{i18n .Lang "label_mail_modal_title"}}</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal mail-form">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{i18n .Lang "label_mail_to"}}</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control mail-to" name="To" maxlength="1024">
+                            <label class="control-label" style="display:none;"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{i18n .Lang "label_mail_subject"}}</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control mail-subject" name="Subject" maxlength="512">
+                            <label class="control-label" style="display:none;"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-10 col-sm-offset-2">
+                            <textarea class="form-control mail-body" rows="10" name="Body"></textarea>
+                            <label class="control-label" style="display:none;"></label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-10 col-sm-offset-2 alert-div"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    {{i18n .Lang "label_btn_close"}}
+                </button>
+                <button type="button" class="btn btn-primary mail-send">
+                    {{i18n .Lang "label_btn_send"}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

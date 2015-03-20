@@ -5,7 +5,7 @@ function addAlert($target, content, alertType) {
         alertType = 'alert-success';
     }
     var html = [
-        '<div class="alert ' + alertType + ' alert-dismissible" role="alert">',
+        '<div class="alert ' + alertType + ' alert-dismissible text-center" role="alert">',
         '<button type="button" class="close" data-dismiss="alert">',
         '<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>',
         '</button>',

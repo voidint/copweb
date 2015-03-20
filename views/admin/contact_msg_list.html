@@ -2,29 +2,24 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="beanbag">
     <meta name="author" content="voidint">
-
     <title>联系人消息 - iBeanBag</title>
-
     <link href="/static/plugins/bootstrap-3.3.2/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="/static/plugins/toopay-bootstrap-markdown-2.8.0/css/bootstrap-markdown.min.css" rel="stylesheet">
     <link href="/static/plugins/font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="/static/plugins/metisMenu-1.0.3/metisMenu.min.css" rel="stylesheet" type="text/css">
     <link href="/static/plugins/eonasdan-bootstrap-datetimepicker-4.7.14/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
     <link href="/static/css/sb-admin-2.css" rel="stylesheet" type="text/css">
-
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
     <style type="text/css">
     body {
         padding-bottom: 30px;
@@ -37,39 +32,45 @@
     #stage-div-id span.glyphicon {
         font-size: 14px;
     }
+    
     #stage-div-id span.fa {
         font-size: 14px;
     }
+    
+    #stage-div-id span.fa-mail-reply-all {
+        cursor: pointer;
+    }
+    
     #stage-div-id span.glyphicon-star-empty {
         font-size: 26px;
         cursor: pointer;
     }
+    
     #stage-div-id span.glyphicon-star {
         font-size: 26px;
     }
+    
     .simple-search-container {
         display: inline-block;
         position: relative;
     }
+    
     .menu-down-pos {
         position: absolute;
         right: 5px;
         top: 10px;
     }
+    
     #simple-search .glyphicon-menu-down,
     #advance-search .glyphicon-menu-up {
         cursor: pointer;
     }
     </style>
-
 </head>
 
 <body>
-
     <div id="wrapper">
-
         {{template "navbarTpl" .}}
-
         <!-- Page Content -->
         <div id="page-wrapper">
             <!-- <div class="container-fluid"> -->
@@ -80,13 +81,11 @@
                 <!--/.col-lg-12-->
             </div>
             <!-- /.row -->
-
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">{{i18n .Lang "admin_msg_contact_panel_heading"}}</div>
                         <div class="panel-body">
-
                             <div class="row">
                                 <div class="col-md-6">
                                     <!-- <div style="padding-bottom:10px;">
@@ -99,7 +98,6 @@
                                             </div>
                                         </div>
                                     </div> -->
-
                                     <div style="padding-bottom:10px;" id="simple-search">
                                         <div class="simple-search-container">
                                             <input type="text" id="simple-search-input" class="form-control" placeholder="{{i18n .Lang `admin_msg_contact_simple_search_placeholder`}}">
@@ -107,7 +105,6 @@
                                         </div>
                                     </div>
                                     <!-- #simple-search -->
-
                                     <div class="panel panel-default" id="advance-search" style="display:none;">
                                         <div class="panel-heading">
                                             <div class="row">
@@ -207,7 +204,6 @@
                                                                 </div> -->
                                                             </div>
                                                         </div>
-
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -220,20 +216,16 @@
                                         <!-- /.panel-body -->
                                     </div>
                                     <!-- /#advance-search -->
-
-
                                     <div class="list-group" id="data-div-id"></div>
                                     <div id="alert-div-id"></div>
                                     <div class="row text-center">
                                         <ul id="pagination"></ul>
                                     </div>
                                 </div>
-
                                 <div class="col-md-6">
                                     <ul class="list-group" id="stage-div-id"></ul>
                                 </div>
                             </div>
-
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -244,22 +236,22 @@
             <!-- /.row -->
         </div>
         <!-- /#page-wrapper -->
-
     </div>
     <!-- /#wrapper -->
-
-    {{template "admin/tpl_footer.html"}}
-
-
+    <!-- footer -->
+    {{template "admin/tpl_footer.html" .}}
+    <!-- mail dialog -->
+    {{template "admin/tpl_mail.html" .}}
     <script src="/static/plugins/jquery-1.11.1.min.js"></script>
     <script src="/static/plugins/bootstrap-3.3.2/js/bootstrap.js"></script>
     <script src="/static/plugins/metisMenu-1.0.3/metisMenu.min.js"></script>
+    <script src="/static/plugins/toopay-bootstrap-markdown-2.8.0/js/bootstrap-markdown.js"></script>
+    <script src="/static/plugins/toopay-bootstrap-markdown-2.8.0/locale/bootstrap-markdown.zh.js"></script>
     <script src="/static/plugins/bootstrap-paginator-1.0/bootstrap-paginator.min.js"></script>
     <script src="/static/plugins/moment-2.9.0/min/moment-with-locales.min.js"></script>
     <script src="/static/plugins/eonasdan-bootstrap-datetimepicker-4.7.14/build/js/bootstrap-datetimepicker.min.js"></script>
     <script src="/static/scripts/sb-admin-2.js"></script>
     <script src="/static/scripts/commFunc.js"></script>
-
     <script type="text/javascript">
     function mark(obj, id) {
         $.ajax({
@@ -296,7 +288,7 @@
             '    <div class="col-sm-10">',
             '      <address>',
             '        <span class="glyphicon glyphicon-user"></span>&nbsp;<strong>' + $item.data('name') + '</strong>',
-            '        <br><span class="glyphicon glyphicon-envelope"></span>&nbsp;<a href="mailto:#">' + $item.data('email') + '</a>',
+            '        <br><span class="glyphicon glyphicon-envelope"></span>&nbsp;<a href="mailto:#">' + $item.data('email') + '</a>&nbsp;<span class="fa fa-mail-reply-all" onclick="mailReply(\'' + $item.data('email') + '\')"></span>',
             '        <br><span class="glyphicon glyphicon-earphone"></span>&nbsp;' + $item.data('phone'),
             '        <br><span class="fa fa-institution"></span>&nbsp;' + $item.data('compnay'),
             '      </address>',
@@ -422,9 +414,115 @@
         $('#msg-date-end').val('');
     };
 
+    // 触发回复邮件
+    function mailReply(mailAddr) {
+        $('.mail-modal').modal('show');
+        $(".mail-to").val(mailAddr);
+    };
 
+    function cleanMailFormStyle() {
+        $(".mail-form .mail-to + label").hide().parent('div').removeClass('has-error');
+        $(".mail-form .mail-subject + label").hide().parent('div').removeClass('has-error');
+        $(".mail-form .md-editor + label").hide().parent('div').removeClass('has-error');
+    };
+
+    // 校验邮件表单项
+    function mailFormValid() {
+        var valid = true;
+
+        var mailTo = $.trim($('.mail-form .mail-to').val());
+        if (mailTo.length === 0 || mailTo.length > 1024) {
+            var tips = '{{i18n .Lang "tips_content_cant_empty_and_too_long" 1024}}';
+            $(".mail-form .mail-to + label").text(tips).show().parent('div').addClass('has-error');
+            valid = false;
+        }
+
+        var mailSubject = $.trim($('.mail-form .mail-subject').val());
+        if (mailSubject.length === 0 || mailSubject.length > 512) {
+            var tips = '{{i18n .Lang "tips_content_cant_empty_and_too_long" 512}}';
+            $(".mail-form .mail-subject + label").text(tips).show().parent('div').addClass('has-error');
+            valid = false;
+        }
+
+        var mailBody = $.trim($('.mail-form .mail-body').val());
+        if (mailBody.length === 0) {
+            var tips = '{{i18n .Lang "tips_mail_body_cant_empty"}}';
+            $(".mail-form .md-editor + label").text(tips).show().parent('div').addClass('has-error');
+            valid = false;
+        }
+        return valid;
+    };
+
+    // 提交邮件内容并委托服务端发送邮件
+    function sendMail() {
+        cleanMailFormStyle();
+
+        if (!mailFormValid()) {
+            return;
+        }
+
+        var $alertDiv = $('.mail-modal .alert-div');
+        $.ajax({
+            type: "POST",
+            url: "/admin/mail/send",
+            data: $('.mail-form').serialize(),
+            dataType: "json",
+            success: function(jsonData) {
+                if (jsonData.Result === "success") {
+                    addAlert($alertDiv, jsonData.Msg, 'alert-success');
+                    return;
+                } else if (jsonData.Result === "fail") {
+                    if (jsonData.Fields != null && typeof jsonData.Fields === 'object' && !$.isEmptyObject(jsonData.Fields)) {
+                        for (var fieldName in jsonData.Fields) {
+                            var tips = jsonData.Fields[fieldName];
+                            if (fieldName == 'Body') {
+                                $(".mail-form .md-editor + label").text(tips).show().parent('div').addClass('has-error');
+                            } else {
+                                $(".mail-form :input[name='" + fieldName + "'] + label").text(tips).show().parent('div').addClass('has-error');
+                            }
+                        }
+                    } else {
+                        addAlert($alertDiv, jsonData.Msg, 'alert-danger');
+                    }
+                }
+            },
+            error: function() {
+                addAlert($alertDiv, '{{i18n .Lang "tips_sys_err_and_contact_tech"}}', 'alert-danger');
+            }
+        });
+    };
+
+    // 请求服务端将markdown内容转化为html
+    function markdown2html(markdown) {
+        var htmlContent;
+        $.ajax({
+            async: false,
+            type: "POST",
+            url: "/admin/markdown2html.json",
+            data: {
+                "markdown": markdown
+            },
+            dataType: "json",
+            success: function(jsonData) {
+                if (jsonData.Result === "success") {
+                    htmlContent = jsonData.ExtObj;
+                } else {
+                    htmlContent = "error...";
+                }
+            }
+        });
+        return htmlContent;
+    };
 
     $(document).ready(function() {
+        // 初始化邮件中的markdown编辑器
+        $('.mail-body').markdown({
+            language: 'en',
+            footer: '{{i18n .Lang "tips_markdown_learning"}}',
+            onPreview: function(e) {
+                return markdown2html(e.getContent());
+            }
+        });
 
         loadData();
 
@@ -468,11 +566,14 @@
             search();
         });
 
+        // 触发发送邮件
+        $('.mail-modal .mail-send').on('click', function() {
+            sendMail();
+        });
+
     });
     </script>
-
     {{template "tpl_ie_warning.html" .}}
-
 </body>
 
 </html>

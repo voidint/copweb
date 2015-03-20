@@ -83,6 +83,9 @@ func init() {
 	beego.Router("/admin/settings/sys", settingContr, "get:ToSysSetting")
 	beego.Router("/admin/settings/changepwd", settingContr, "get:ToChangePwd")
 
+	mailContr := &controllers.MailController{}
+	beego.Router("/admin/mail/send", mailContr, "post:SendMail")
+
 	// 登录过滤器
 	beego.InsertFilter("/admin/*", beego.BeforeRouter, func(ctx *context.Context) {
 		user, ok := ctx.Input.Session("UserInfo").(models.User)
