@@ -23,7 +23,7 @@ const (
 	MailSeparator = ";"
 )
 
-// 发送邮件
+// SendMail 发送邮件
 func (this *MailController) SendMail() {
 	resp := AjaxFormResp{
 		Result: RESULT_RESP_FAIL,
@@ -76,17 +76,30 @@ func (this *MailController) SendMail() {
 	}
 
 	// 提取邮件发送者邮件服务器配置信息
-	host := "smtp.126.com"
-	smtpPort := 25
-	sender := "voidint@126.com"
-	pwd := ""
+	user := this.GetSession("UserInfo").(models.User)
+	sett, has, err := models.GetMailSettingsByUserId(user.UserId)
+	if err != nil {
+		beego.Error(fmt.Sprintf("models.GetMailSettingsByUserId(%s) err: %s", user.UserId, err))
+		resp.Msg = this.Tr("tips_sys_err_and_contact_tech")
+		return
+	}
+
+	if !has {
+		resp.Msg = this.Tr("tips_mail_not_set")
+		return
+	}
+
+	host := sett.Outgoing
+	smtpPort := sett.OutgoingPort
+	sender := sett.Account
+	pwd := sett.Pwd
 
 	addr := fmt.Sprintf("%s:%d", host, smtpPort)
 	auth := smtp.PlainAuth("", sender, pwd, host)
 	msgFmt := "From: %s<%s>\r\nTo: %s\r\nSubject: %s\r\nContent-Type: %s\r\n\r\n%s"
 	msg := fmt.Sprintf(msgFmt, sender, sender, mail.To, mail.Subject, MailContentType, utils.Markdown2html(mail.Body))
 
-	err := smtp.SendMail(addr, auth, sender, strings.Split(mail.To, MailSeparator), []byte(msg))
+	err = smtp.SendMail(addr, auth, sender, strings.Split(mail.To, MailSeparator), []byte(msg))
 	if err != nil {
 		beego.Error(fmt.Sprintf("send email err: %s\n%s", err, msg))
 		return

@@ -416,14 +416,22 @@
 
     // 触发回复邮件
     function mailReply(mailAddr) {
-        $('.mail-modal').modal('show');
+        cleanMailForm();
         $(".mail-to").val(mailAddr);
+        $('.mail-modal').modal('show');
     };
 
     function cleanMailFormStyle() {
         $(".mail-form .mail-to + label").hide().parent('div').removeClass('has-error');
         $(".mail-form .mail-subject + label").hide().parent('div').removeClass('has-error');
         $(".mail-form .md-editor + label").hide().parent('div').removeClass('has-error');
+        $(".mail-form .alert-div").empty();
+    };
+
+    function cleanMailForm() {
+        $(".mail-form .mail-to").val('');
+        $(".mail-form .mail-subject").val('');
+        $(".mail-form .mail-body").val('');
     };
 
     // 校验邮件表单项

@@ -82,6 +82,8 @@ func init() {
 	beego.Router("/admin/settings/personal", settingContr, "get:ToPersonalSetting")
 	beego.Router("/admin/settings/sys", settingContr, "get:ToSysSetting")
 	beego.Router("/admin/settings/changepwd", settingContr, "get:ToChangePwd")
+	beego.Router("/admin/settings/mail", settingContr, "get:ToEmail")
+	beego.Router("/admin/settings/mail", settingContr, "post:SaveMailBoxInfo")
 
 	mailContr := &controllers.MailController{}
 	beego.Router("/admin/mail/send", mailContr, "post:SendMail")
