@@ -63,3 +63,18 @@
     </div>
     <!-- /.panel-body -->
 </div>
+<script type="text/javascript">
+$(document).ready(function() {
+    // 根据邮箱帐号自动补全发件服务器
+    $('.mail-settings-form :input[name="Account"]').change(function(event) {
+        var account = $.trim($(this).val());
+        var $outgoing = $('.mail-settings-form :input[name="Outgoing"]');
+        // if ($.trim($outgoing.val()).length == 0) {
+        var idx = account.indexOf("@");
+        if (idx > 0 && idx < account.length - 1) {
+            $outgoing.val("smtp." + account.substring(idx + 1));
+        }
+        // }
+    });
+});
+</script>
