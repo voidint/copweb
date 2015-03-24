@@ -1,23 +1,11 @@
-/*创建数据库*/
-CREATE DATABASE IF NOT EXISTS corpweb DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-
-/*创建数据库管理员用户*/
-CREATE USER 'panda_corpweb'@'%' IDENTIFIED BY 'abc#123';
-
-
-/*赋予当前数据库所有操作权限*/
-GRANT ALL PRIVILEGES ON corpweb.* TO 'panda_corpweb'@'%';
-
-
 /*选择目标数据库*/
 USE corpweb;
 
 -- MySQL dump 10.13  Distrib 5.6.14, for Win64 (x86_64)
 --
--- Host: localhost    Database: cms4go
+-- Host: localhost    Database: corpweb
 -- ------------------------------------------------------
--- Server version	5.6.14
+-- Server version 5.6.14
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -179,6 +167,27 @@ CREATE TABLE `t_login` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `t_mail`
+--
+
+DROP TABLE IF EXISTS `t_mail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_mail` (
+  `mail_id` char(32) NOT NULL,
+  `mail_from` varchar(256) NOT NULL COMMENT '邮件发送人',
+  `mail_to` varchar(1024) NOT NULL COMMENT '邮件接收人列表',
+  `mail_cc` varchar(1024) DEFAULT NULL COMMENT '邮件抄送列表',
+  `mail_bcc` varchar(255) DEFAULT NULL COMMENT '邮件密送列表',
+  `mail_subject` varchar(512) NOT NULL COMMENT '邮件主题',
+  `mail_body` text NOT NULL COMMENT '邮件正文',
+  `mail_date` datetime NOT NULL COMMENT '邮件发送时间',
+  `mail_owner` char(36) NOT NULL COMMENT '所有者（系统用户ID）',
+  PRIMARY KEY (`mail_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `t_product`
 --
 
@@ -219,6 +228,27 @@ CREATE TABLE `t_product_img` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `t_settings_mail`
+--
+
+DROP TABLE IF EXISTS `t_settings_mail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `t_settings_mail` (
+  `mailset_id` char(36) NOT NULL COMMENT '主键ID',
+  `mailset_account` varchar(128) NOT NULL COMMENT '邮件账号',
+  `mailset_pwd` varchar(50) NOT NULL COMMENT '邮箱密码（加密）',
+  `mailset_outgoing` varchar(128) NOT NULL COMMENT '邮件发件服务器，如smtp.126.com',
+  `mailset_outgoing_port` int(5) unsigned NOT NULL DEFAULT '25' COMMENT '发件服务器端口号，默认值25',
+  `mailset_created` datetime NOT NULL,
+  `mailset_modified` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `mailset_owner` char(36) NOT NULL COMMENT '所有者（系统用户ID）',
+  PRIMARY KEY (`mailset_id`),
+  UNIQUE KEY `uk_userid_t_settings_mail` (`mailset_owner`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `t_user`
 --
 
@@ -246,9 +276,4 @@ CREATE TABLE `t_user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-15 15:50:57
-
--- 默认管理员账号
-INSERT INTO `t_login` VALUES ('7450b7fb-8145-11e4-beed-005056c00008', 'voidint@126.com', 'd3aec9ef22406323fa726804644b6af9', '616769');
-INSERT INTO `t_user` VALUES ('7450b7fb-8145-11e4-beed-005056c00008', 'voidint', '1989-02-16', 'male', 'voidint', '2014-12-09 17:15:14', '2014-12-11 22:55:08');
-
+-- Dump completed on 2015-03-24 17:38:06
