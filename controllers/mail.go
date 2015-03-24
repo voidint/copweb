@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"corpweb/models"
 	"corpweb/utils"
+	"encoding/base64"
 	"fmt"
 	"net/smtp"
 	"strings"
@@ -21,6 +22,8 @@ const (
 	MailContentType = "text/html;charset=UTF-8"
 	// 邮件地址间的分隔符
 	MailSeparator = ";"
+	// 邮箱登录密码加密秘钥
+	MailPwdKey = "Sdjftmoil45df#$DGJDI^ku26XXkdDJK"
 )
 
 // SendMail 发送邮件
@@ -84,15 +87,30 @@ func (this *MailController) SendMail() {
 		return
 	}
 
+	// 用户还未配置邮件服务
 	if !has {
 		resp.Msg = this.Tr("tips_mail_not_set")
 		return
 	}
 
+	// 使用AES解密用户邮箱密码
+	bEnc, err := base64.StdEncoding.DecodeString(sett.Pwd)
+	if err != nil {
+		beego.Error(fmt.Sprintf("base64.StdEncoding.DecodeString err: %s", err))
+		resp.Msg = this.Tr("tips_sys_err_and_contact_tech")
+		return
+	}
+	bRaw, err := utils.AesDecrypt(bEnc, []byte(MailPwdKey))
+	if err != nil {
+		beego.Error(fmt.Sprintf("utils.AesDecrypt err: %s", err))
+		resp.Msg = this.Tr("tips_sys_err_and_contact_tech")
+		return
+	}
+
+	pwd := string(bRaw)
 	host := sett.Outgoing
 	smtpPort := sett.OutgoingPort
 	sender := sett.Account
-	pwd := sett.Pwd
 
 	addr := fmt.Sprintf("%s:%d", host, smtpPort)
 	auth := smtp.PlainAuth("", sender, pwd, host)

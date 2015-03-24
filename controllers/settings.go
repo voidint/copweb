@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"corpweb/models"
+	"corpweb/utils"
+	"encoding/base64"
 	"fmt"
 
 	"github.com/astaxie/beego"
@@ -85,6 +87,20 @@ func (this *SettingsController) SaveMailBoxInfo() {
 
 	if len(resp.Fields) > 0 {
 		return
+	}
+
+	if sett.Pwd == "******" {
+		// 用户并非要修改密码
+		(&sett).Pwd = ""
+	} else {
+		// 使用AES加密存储用户邮箱密码（此种方式不够安全）
+		enc, err := utils.AesEncrypt([]byte(sett.Pwd), []byte(MailPwdKey))
+		if err != nil {
+			beego.Error(fmt.Sprintf("AesEncrypt err:%s", &sett, err))
+			resp.Msg = this.Tr("tips_sys_err_and_contact_tech")
+			return
+		}
+		(&sett).Pwd = base64.StdEncoding.EncodeToString(enc)
 	}
 
 	user := this.GetSession("UserInfo").(models.User)
