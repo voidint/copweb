@@ -28,7 +28,7 @@ go get github.com/slene/blackfriday
 cd $GOPATH/src/corpweb
 go build 
 ```
-- 安装[MySQL](http://www.mysql.com/)数据库服务器。使用root账号执行初始化SQL脚本`sql/init.sql`，以下内容包含在脚本中，强烈建议用户修改数据库名称、数据库登录账号名、数据库登录账号密码等参数以保障数据库安全，修改完后需要一并修改`conf/app.conf`配置文件中的`dbname`、`dbusername`、`dbuserpwd`三个参数。
+- 安装[MySQL](http://www.mysql.com/)数据库服务器。使用root账号顺序执行初始化SQL脚本`sql/1_pre.sql`、`sql/2_tables.sql`、`sql/3_initdata.sql`。以下内容包含在`sql/1_pre.sql`脚本中，强烈建议用户修改数据库名称、数据库登录账号名、数据库登录账号密码等参数以保障数据库安全，修改完后需要一并修改`conf/app.conf`配置文件中的`dbname`、`dbusername`、`dbuserpwd`三个参数。
 ```sql
 /*创建名为“corpweb”的数据库*/
 CREATE DATABASE IF NOT EXISTS corpweb DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
@@ -45,7 +45,6 @@ GRANT ALL PRIVILEGES ON corpweb.* TO 'panda_corpweb'@'%';
 /*选择目标数据库*/
 USE corpweb;
 
-/*...省略以下内容...*/
 ```
 
 
