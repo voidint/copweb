@@ -46,10 +46,9 @@
                     <p>IMAP</p>
                 </div>
             </div> -->
-            <div class="alert-div"></div>
             <div class="form-group">
                 <div class="col-md-4 col-md-offset-2">
-                    <button type="button" class="btn btn-default btn-block mail-test-conn">
+                    <button type="button" class="btn btn-default btn-block mail-test-conn" data-testing-text="{{i18n .Lang `label_btn_testing`}}" onclick="checkMailAuth($('.mail-settings-form'));">
                         {{i18n .Lang "label_btn_test_conn"}}
                     </button>
                 </div>
@@ -59,6 +58,10 @@
                     </button>
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-md-8 col-md-offset-2 alert-div"></div>
+            </div>
+            
         </form>
     </div>
     <!-- /.panel-body -->
@@ -76,5 +79,6 @@ $(document).ready(function() {
         }
         // }
     });
+
 });
 </script>

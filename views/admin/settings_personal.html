@@ -223,6 +223,47 @@
         });
     };
 
+    function checkMailAuth($form) {
+        var $testBtn = $form.find('.mail-test-conn');
+        if ($.trim($testBtn.text()) == $testBtn.data('testing-text')) {
+            return;
+        }
+
+        if (!validMailBoxInfoForm($form)) {
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/settings/mail/auth",
+            dataType: "json",
+            data: $form.serialize(),
+            beforeSend: function() {
+                $testBtn.button('testing');
+            },
+            complete: function() {
+                $testBtn.button('reset');
+            },
+            success: function(json) {
+                if (json.Result === 'success') {
+                    addAlert($form.find('.alert-div'), json.Msg, 'alert-success');
+                    return;
+                }
+                if (json.Fields != null && typeof json.Fields === 'object' && !$.isEmptyObject(json.Fields)) {
+                    for (var fieldName in json.Fields) {
+                        var tips = json.Fields[fieldName];
+                        $form.find(":input[name='" + fieldName + "'] + label").text(tips).show().parent('div').addClass('has-error');
+                    }
+                } else {
+                    addAlert($form.find('.alert-div'), json.Msg, 'alert-danger');
+                }
+            },
+            error: function() {
+                addAlert($form.find('.alert-div'), '{{i18n .Lang "tips_sys_err_and_contact_tech"}}', 'alert-danger');
+            }
+        });
+    };
+
 
     // 加载指定URL的HTML内容
     function loadHTML(url) {

@@ -417,6 +417,7 @@
     // 触发回复邮件
     function mailReply(mailAddr) {
         cleanMailForm();
+        cleanMailFormStyle();
         $(".mail-to").val(mailAddr);
         $('.mail-modal').modal('show');
     };
@@ -462,19 +463,30 @@
     };
 
     // 提交邮件内容并委托服务端发送邮件
-    function sendMail() {
+    function sendMail($form) {
+        var $sendBtn = $('.mail-modal .mail-send');
+        if ($.trim($sendBtn.text()) == $sendBtn.data('sending-text')) {
+            return;
+        }
+
         cleanMailFormStyle();
 
         if (!mailFormValid()) {
             return;
         }
 
-        var $alertDiv = $('.mail-modal .alert-div');
+        var $alertDiv = $form.find('.alert-div');
         $.ajax({
             type: "POST",
             url: "/admin/mail/send",
-            data: $('.mail-form').serialize(),
+            data: $form.serialize(),
             dataType: "json",
+            beforeSend: function() {
+                $sendBtn.button('sending');
+            },
+            complete: function() {
+                $sendBtn.button('reset');
+            },
             success: function(jsonData) {
                 if (jsonData.Result === "success") {
                     addAlert($alertDiv, jsonData.Msg, 'alert-success');
@@ -576,8 +588,9 @@
 
         // 触发发送邮件
         $('.mail-modal .mail-send').on('click', function() {
-            sendMail();
+            sendMail($('.mail-modal .mail-form'));
         });
+
 
     });
     </script>
